@@ -1,63 +1,32 @@
-#define _CRT_SECURE_NO_WARNINGS
+ï»¿//#include<stdio.h>
+//#include<stdlib.h>
+//void Print(int arr[6]){
+//	int* p = arr;
+//	for (int i = 0; i < 6; i++){
+//	printf("%d",*(p+i));
+//	}
+//}
+//int main(){
+//	int arr[6] = { 0, 1, 2, 3, 4, 5 };
+//	Print( arr[6]);
+//	system("pause");
+//	return 0;
+//}
 #include<stdio.h>
-int Add(int a, int b)
+ï»¿int PrintArr(int arr[])
 {
-	return a + b;
+	int i = 0;
+	int* p = arr;
+	for (i = 0; i < 10; i++)
+	{
+		printf("%d ", *(p + i));
+	}
 }
-int Sub(int a, int b)
-{
-	return a - b;
-}
-int Mul(int a, int b)
-{
-	return a * b;
-}
-int Div(int a, int b)
-{
-	return a / b;
-}
-int Mod(int a, int b)
-{
-	return a % b;
-}
+
 int main()
 {
-	int select = 1;
-	int op1, op2, result;
-	while (select) {
-		printf("***************************\n");
-		printf("*[1]Add       [2]Sub      *\n");
-		printf("*[3]Mul       [4]Div      *\n");
-		printf("*[5]Mod       [0]Quit     *\n");
-		printf("***************************\n");
-		printf("ÇëÑ¡Ôñ:>");
-		scanf("%d", &select);
-		if (select == 0) 
-			break;
-		printf("ÇëÑ¡Ôñop1,op2:>");
-		scanf("%d,%d", &op1, &op2);
-		switch (select) {
-			case 1:
-				result = Add(op1, op2);
-				break;
-			case 2:
-				result = Sub(op1, op2);
-				break;
-			case 3:
-				result = Mul(op1, op2);
-				break;
-			case 4:
-				result = Div(op1, op2);
-				break;
-			case 5:
-				result = Mod(op1, op2);
-				break;
-			default:
-				printf("ÊäÈëµÄcmdÓĞÎó£¬ÇëÖØĞÂÊäÈë......\n");
-				break;
-		}
-		printf("result = %d\n", result);
-	}
-	printf("ÏµÍ³ÍË³ö\n");
+	int arr[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+	PrintArr(arr);
+
 	return 0;
 }
