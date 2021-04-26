@@ -1,28 +1,71 @@
-//#include<stdio.h>
-//#include<stdlib.h>
-//struct A {
-//	long a1;
-//	short a2;
-//	int a3;
-//	int* a4;
+//#include<iostream>
+//#include<string>
+//using namespace std;
+//class A
+//{
+//	friend long fun(A  s) {
+//		if (s.x < 3) {
+//			return 1;
+//		}
+//		return s.x + fun(A(s.x - 1));
+//	}
+//public:
+//	A(long a) {
+//		x = a--;
+//	}
+//private:
+//	long x;
 //};
 //int main()
 //{
-//	printf("%d\n", sizeof(A));
-//	return 0;
-//}
-//ÊäÈë1abcedf2df<»Ø³µ>
-//#include<stdio.h>
-//int main()
-//{
-//	char a = 0, ch;
-//	while ((ch = getchar()) != '\n') {
-//		if (a % 2 != 0 && (ch >= 'a' && ch <= 'z')) {
-//			ch = ch - 'a' + 'A';
-//		}
-//		a++;
-//		putchar(ch);
+//	int sum = 0;
+//	for (int i = 0; i < 5; i++) {
+//		sum += fun(A(i));
 //	}
-//	printf("\n");
+//	cout << sum;
 //	return 0;
 //}
+#include<iostream>
+using namespace std;
+class parent
+{
+	int i;
+protected:
+	int x;
+public:
+	parent()
+	{
+		x = 0;
+		i = 0;
+	}
+	void change()
+	{
+		x++;
+		i++;
+	}
+	void display();
+};
+class son :public parent
+{
+public:
+	void modify();
+};
+void parent::display()
+{
+	cout << "x=" << x << endl;
+}
+void son::modify()
+{
+	x++;
+}
+int main()
+{
+	son A; parent B;
+	A.display();
+	A.change();
+	A.modify();
+	A.display();
+	B.change();
+	B.display();
+	return 0;
+}
