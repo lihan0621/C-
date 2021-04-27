@@ -1,23 +1,32 @@
 #include<iostream>
-#include<vector>
 #include<algorithm>
+#include<string>
 using namespace std;
 int main()
 {
-	int sum = 0;
-	int n = 0;
-	cin >> n;
-	vector<int> arr;
-	arr.resize(3 * n);
-	for (int i = 0; i < (3 * n); ++i)
+	string s;
+	getline(cin, s);
+	//翻转整个句子
+	reverse(s.begin(), s.end());
+	//翻转整个单词
+	auto start = s.begin();
+	while (start != s.end())
 	{
-		cin >> arr[i];
+		auto end = start;
+		while (end != s.end() && *end != ' ')
+		{
+			end++;
+		}
+		reverse(start, end);
+		if (end != s.end())
+		{
+			start = end + 1;
+		}
+		else
+		{
+			start = end;
+		}
 	}
-	std::sort(arr.begin(), arr.end());
-	for (int i = 0; i < n; ++i)
-	{
-		sum = sum + arr[arr.size() - (2 *  (i + 1))];
-	}
-	cout << sum << endl;
+	cout << s << endl;
 	return 0;
 }
