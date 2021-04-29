@@ -1,15 +1,29 @@
 #include<iostream>
-#include<algorithm>
+#include<vector>
 using namespace std;
+int GetMax(int a,int b)
+{
+	return a > b ? a : b;
+}
 int main()
 {
-	int a, b, c, d;
-	cin >> a >> b >> c >> d;
-	int A = (a + c) / 2;
-	int C = (b - d) / 2;
-	int B1 = (c - a) / 2;
-	int B2 = (b + d) / 2;
-	if (B1 != B2) cout << "NO";
-	else cout << A << " " << B1 << " " << C << endl;
+	int size;
+	cin >> size;
+	vector<int> nums(size);
+	for (int i = 0; i < size; i++)
+	{
+		cin >> nums[i];
+	}
+	int sum = nums[0];
+	int max = nums[0];
+	for (int i = 0; i < size; i++)
+	{
+		sum = GetMax(sum+nums[i],nums[i]);
+		if (sum >= max)
+		{
+			max = sum;
+		}
+	}
+	cout << max << endl;
 	return 0;
 }
