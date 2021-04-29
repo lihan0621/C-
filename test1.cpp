@@ -22,7 +22,7 @@ int main()
 	getline(cin, str1);
 	getline(cin, str2);
 	int count = 0;
-	for (int i = 0; i < str1.size(); i++) {
+	for (int i = 0; i <= str1.size(); i++) {
 		string str = str1;
 		str.insert(i, str2);
 		if (IsCircle(str))
