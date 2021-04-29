@@ -1,28 +1,35 @@
 #include<iostream>
 #include<string>
-#include<algorithm>
 using namespace std;
+bool IsCircle(const string& s)
+{
+	size_t begin = 0;
+	size_t end = s.size() - 1;
+	while (begin < end)
+	{
+		if (s[begin] != s[end])
+		{
+			return false;
+		}
+		++begin;
+		--end;
+	}
+	return true;
+}
 int main()
 {
-	string s, table = "0123456789abcdef";
-	int m, n;
-	cin >> m >> n;
-	bool flag = false;
-	if (m < 0)
-	{
-		m = 0 - m;
-		flag = true;
+	string str1, str2;
+	getline(cin, str1);
+	getline(cin, str2);
+	int count = 0;
+	for (int i = 0; i < str1.size(); i++) {
+		string str = str1;
+		str.insert(i, str2);
+		if (IsCircle(str))
+		{
+			count++;
+		}
 	}
-	while (m != 0)
-	{
-		s += table[m % n];
-		m /= n;
-	}
-	if (flag == true)
-	{
-		s += "-";
-	}
-	reverse(s.begin(), s.end());
-	cout << s << endl;
+	cout << count << endl;
 	return 0;
 }
