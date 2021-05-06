@@ -1,36 +1,13 @@
-#include<iostream>
-#include<stack>
-using namespace std;
-class Parenthesis
-{
-public:
-	bool ChkParenthesis(string A, int n)
-	{
-		stack<char> sc;
-		for (auto ch : A) {
-			switch (ch) {
-			case'(':
-				sc.push(ch);
-				break;
-			case')':
-				if (sc.empty()) {
-					return false;
-				}
-				sc.pop();
-			default:
-				return false;
-			}
-		}
-		return sc.empty();
-	}
-};
-void test()
-{
-	Parenthesis s;
-	s.ChkParenthesis("()()()",6);
-}
+#include<stdio.h>
 int main()
 {
-	test();
+	int arr[] = { 1,2,3,4,5 };
+	short* p = (short*)arr;
+	for (int i = 0; i < 4; i++) {
+		*(p + i) = 0;
+	}
+	for (int i = 0; i < 5; i++) {
+		printf("%d\n", arr[i]);
+	}
 	return 0;
 }
