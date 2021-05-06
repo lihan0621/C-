@@ -1,29 +1,40 @@
 #include<iostream>
-#include<vector>
 using namespace std;
-int GetMax(int a,int b)
+class Solution
 {
-	return a > b ? a : b;
+public:
+	int StrToInt(string str) {
+		if (str.empty()) {
+			return 0;
+		}
+		int flg = 1;
+		if (str[0] == '-') {
+			flg = -1;
+			str[0] = '0';
+		}
+		else if (str[0] == '+') {
+			flg = 1;
+			str[0] = '0';
+		}
+		int sum = 0;
+		for (int i = 0; i < str.size(); i++) {
+			if (str[i] < '0' || str[i]>'9') {
+				sum = 0;
+				break;
+			}
+			sum = sum * 10 + str[i] - '0';
+		}
+		cout << flg * sum << endl;
+		return 0;
+	}
+};
+void test()
+{
+	Solution s;
+	s.StrToInt("+123");
 }
 int main()
 {
-	int size;
-	cin >> size;
-	vector<int> nums(size);
-	for (int i = 0; i < size; i++)
-	{
-		cin >> nums[i];
-	}
-	int sum = nums[0];
-	int max = nums[0];
-	for (int i = 0; i < size; i++)
-	{
-		sum = GetMax(sum+nums[i],nums[i]);
-		if (sum >= max)
-		{
-			max = sum;
-		}
-	}
-	cout << max << endl;
+	test();
 	return 0;
 }
