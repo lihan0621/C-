@@ -1,40 +1,22 @@
 #include<iostream>
 using namespace std;
-class Solution
-{
-public:
-	int StrToInt(string str) {
-		if (str.empty()) {
-			return 0;
-		}
-		int flg = 1;
-		if (str[0] == '-') {
-			flg = -1;
-			str[0] = '0';
-		}
-		else if (str[0] == '+') {
-			flg = 1;
-			str[0] = '0';
-		}
-		int sum = 0;
-		for (int i = 0; i < str.size(); i++) {
-			if (str[i] < '0' || str[i]>'9') {
-				sum = 0;
-				break;
-			}
-			sum = sum * 10 + str[i] - '0';
-		}
-		cout << flg * sum << endl;
-		return 0;
-	}
-};
-void test()
-{
-	Solution s;
-	s.StrToInt("+123");
-}
 int main()
 {
-	test();
+	int f, f1 = 0, f2 = 1;
+	int N, left = 0, right = 0;
+	cin >> N;
+	while (1) {
+		f = f1 + f2;
+		f1 = f2;
+		f2 = f;
+		if (f < N) {
+			left = f;
+		}
+		else {
+			right = f;
+			break;
+		}
+	}
+	cout << min(N - left, right - N) << endl;
 	return 0;
 }
