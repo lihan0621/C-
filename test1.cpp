@@ -1,13 +1,25 @@
-#include<stdio.h>
-int main()
-{
-	int arr[] = { 1,2,3,4,5 };
-	short* p = (short*)arr;
-	for (int i = 0; i < 4; i++) {
-		*(p + i) = 0;
-	}
-	for (int i = 0; i < 5; i++) {
-		printf("%d\n", arr[i]);
-	}
-	return 0;
-}
+//#include<iostream>
+//#include<vector>
+//using namespace std;
+//int main()
+//{
+//	int n = 0;
+//	cin >> n;
+//	int count = 0;
+//	//vector<int> arr;
+//	int arr[1024] = { 0 };
+//	while (n) {
+//		for (int i = 0; i < n; i++) {
+//			arr[i] = n % 2;
+//			n /= 2;
+//		}
+//	}
+//	int size = sizeof(arr) / sizeof(arr[0]);
+//	for (int i = 0; i < size; i++) {
+//		if (arr[i] == 1 && arr[i + 1] == 1 ) {
+//			count++;
+//		}
+//	}
+//	cout << count << endl;
+//	return 0;
+//}
