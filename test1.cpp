@@ -1,31 +1,30 @@
 //#include <iostream>
 //using namespace std;
-//int addtion(int A, int B)
-//{
-//	if (A == 0)return B;
-//	if (B == 0)return A;
-//	int a = A ^ B;
-//	int b = (A & B) << 1;
-//	return addtion(a, b);
-//}
 //int main()
 //{
-//	cout << addtion(1, 3) << endl;
+//	int num = 0;
+//	cin >> num;
+//	int count = 0, max_count = 0;
+//	for (int i = 0; i < 32; i++) {
+//		if (num & (1 << i)) {
+//			count++;
+//			max_count = max(count, max_count);
+//		}
+//		else {
+//			count = 0;
+//		}
+//	}
+//	//如果是-1, 程序崩溃;
+//	/*while (num) {
+//		if (num & 1) {
+//			count++;
+//			max_count = max(count, max_count);
+//		}
+//		else {
+//			count = 0;
+//		}
+//			num = num >> 1;
+//	}*/
+//	cout << count << endl;
 //	return 0;
 //}
-#include <iostream>
-using namespace std;
-int pathnum(int n, int m)
-{
-	if (n == 0 || m == 0) {
-		return 1;
-	}
-	return pathnum(n - 1, m) + pathnum(n, m - 1);
-}
-int main()
-{
-	int n, m;
-	cin >> n >> m;
-	cout << pathnum(n, m) << endl;
-	return 0;
-}
