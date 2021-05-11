@@ -1,92 +1,73 @@
-#define _CRT_SECURE_NO_WARNINGS
-#include<stdio.h>
-#include<string>
+ï»¿#include<stdio.h>
 #include<stdlib.h>
-using namespace std;
-typedef  struct {//Ê÷½á¹¹
-	int weight;//¶¨ÒåÈ¨ÖØ
-	int parent, lchild, rchild;//¶¨ÒåË«Ç×£¬×óº¢×Ó£¬ÓÒº¢×Ó£»
-}HTNode, *HuffmanTree;
-typedef char * * HuffmanCode;
-void select(HuffmanTree HT, int m, int* s1, int* s2) {
-	int i;
-	int min1 = 100;
-	int min2 = 100;
-	for (i = 1; i <= m; i++) {
-		if (HT[i].parent == 0 && min1 > HT[i].weight) {
-			min1 = HT[i].weight;
-			*s1 = i;
-		}
-	}
-	for (i = 1; i <= m; i++) {
-		if (i != (*s1) && HT[i].parent == 0)
-		if (HT[i].weight < min2) {
-			min2 = HT[i].weight;
-			*s2 = i;
-		}
-	}
-}
-void HuffmanCoding(HuffmanTree & HT, HuffmanCode &HC, int *w, int n) //HTÎªµØÖ·´«µİµÄ´æ´¢¹ş·òÂüÊ÷µÄÊı×é£¬wÎª´æ´¢½áµãÈ¨ÖØÖµµÄÊı×é£¬nÎª½áµã¸öÊı£¬²¢Çó³ön¸ö×Ö·ûµÄºÕ·òÂü±àÂë¡£
+//int countBit(int num)
+//{
+//	//ä¾æ¬¡å–1,10ï¼Œ100...è¿™äº›æ•°å­—å’Œnumè¿›è¡ŒæŒ‰ä½ä¸
+//	//å–1è¿ç®—æ—¶ï¼Œç›¸å½“äºæŠŠnumçš„æœ€åä¸€ä½å–å‡ºæ¥äº†
+//	//å–10è¿ç®—æ—¶ï¼Œç›¸å½“äºæŠŠnumçš„å€’æ•°ç¬¬äºŒä½å–å‡ºæ¥äº†
+//	int count = 0;
+//	for (int i = 0; i < 32; i++)
+//	{
+//		if (num & (1 << i))
+//		{
+//			count++;
+//		}
+//	}
+//	return count;
+//}
+//int main()
+//{
+//	int num = 0;
+//	scanf_s(" %d", &num);
+//	int ret = countBit(num);
+//	printf(" %d \n", ret);
+//	system("pause");
+//	return 0;
+//}
+ï»¿int    main()
+
 {
-	int m;
-	int i;
-	HuffmanTree p;
-	int start; int s1; int s2;
-	unsigned c, f;
-	if (n <= 1)return;//Èç¹ûÖ»ÓĞÒ»¸ö±àÂë£¬ÔòÏàµ±ÓÚ0£»
-	m = 2 * n - 1;//¹ş·òÂüÊ÷×Ü½ÚµãÊı£¬nÎªÒ¶×Ó½Úµã
-	HT = (HuffmanTree)malloc((m + 1) * sizeof(HTNode));//0ºÅµ¥Ôª²»ÓÃ
-	for (p = HT + 1, i = 1; i <= n; ++i, ++p, ++w) *p = { *w, 0, 0, 0 };// ³õÊ¼»¯¹ş·òÂüÊ÷ÖĞËùÓĞ½áµã
-	for (int i = n + 1; i <= m; ++i, ++p) *p = { 0, 0, 0, 0 }//´ÓÊı×éµÄÏÂ±ên+1³õÊ¼»¯ËùÓĞ½áµã¡£
-	;
-	for (i = n + 1; i <= m; ++i)//½¨ºÕ·òÂüÊ÷
+
+	string a = "hello world";
+
+	string b = a;
+
+	if (a.c_str() == b.c_str())
+
 	{
-		select(HT, i - 1, &s1, &s2);
-		HT[s1].parent = i;
-		HT[s2].parent = i;
-		HT[i].lchild = s1;
-		HT[i].rchild = s2;
-		HT[i].weight = HT[s1].weight + HT[s2].weight;
-	}
-	printf("ÏÂ±ê\tÈ¨Öµ\tË«Ç×\t×óº¢×Ó\tÓÒº¢×Ó\n");
-	for (i = 1; i <= m; i++)
-	{
-		printf("%d\t%d\t%d\t%d\t%d\t\n", i, HT[i].weight, HT[i].parent, HT[i].lchild, HT[i].rchild);
+
+		cout << "true" << endl;
+
 	}
 
-	HC = (HuffmanCode)malloc((n + 1) * sizeof(char*));//·ÖÅän¸ö×Ö·û±àÂëµÄÍ·Ö¸ÕëÏòÁ¿
-	char* cd = (char*)malloc(n * sizeof(char)); ///´æ·Å½áµã¹ş·òÂü±àÂëµÄ×Ö·û´®Êı×é
-	cd[n - 1] = '\0';//×Ö·û´®½áÊø·û
-	for (i = 1; i <= n; i++)
-	{
-		start = n - 1;//µ±Ç°½áµãÔÚÊı×éÖĞµÄÎ»ÖÃ£»
-		for (c = i, f = HT[i].parent; f != 0; c = f, f = HT[f].parent)//´ÓÒ¶×Óµ½¸ùÄæÏòÇó±àÂë£¬Ö±µ½ÕÒµ½¸ù½Úµã
-		if (HT[f].lchild == c)    cd[--start] = '0';
-		else cd[--start] = '1';//Èç¹û¸Ã½áµãÊÇ¸¸½áµãµÄ×óº¢×ÓÔò¶ÔÓ¦Â·¾¶±àÂëÎª0£¬·ñÔòÎªÓÒº¢×Ó±àÂëÎª1£»
-		HC[i] = (char*)malloc((n - start) * sizeof(char));//ÎªµÚi¸ö×Ö·û±àÂë·ÖÅä¿Õ¼ä
-		strcpy(HC[i], &cd[start]);//´Ócd¸´ÖÆ±àÂë£¨´®£©µ½HC ×Ö·û´®¸³Öµ£»
-	}
-	free(cd);//ÊÍ·Å¹¤×÷¿Õ¼ä¡£
-}
+	else cout << "false" << endl;
 
-int main(void)
-{
-	HuffmanTree HT;
-	HuffmanCode HC;
-	int* w, n, i;
-	printf("ÇëÊäÈëÈ¨ÖµµÄ¸öÊı(>1)£º");
-	scanf("%d", &n);
-	w = (int*)malloc(n * sizeof(int));
-	printf("ÇëÒÀ´ÎÊäÈë%d¸öÈ¨Öµ£º\n", n);
-	for (i = 0; i <= n - 1; i++)
-		scanf("%d", w + i);
-	HuffmanCoding(HT, HC, w, n);
-	for (i = 1; i <= n; i++)
+	string c = b;
+
+	c = "";
+
+	if (a.c_str() == b.c_str())
+
 	{
-		printf("µÚ%d¸öÒ¶×Ó½áµãµÄ±àÂë£º", i);
-		printf("%s\n", HC[i]);
+
+		cout << "true" << endl;
+
 	}
 
+	else cout << "false" << endl;
+
+	a = "";
+
+	if (a.c_str() == b.c_str())
+
+	{
+
+		cout << "true" << endl;
+
+	}
+
+	else cout << "false" << endl;
 	system("pause");
 	return 0;
+
 }
