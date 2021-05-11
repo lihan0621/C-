@@ -1,22 +1,24 @@
-#include <iostream>
+#include<iostream>
+#include<cmath>
 using namespace std;
-class LCA
+bool Is_prime(int num)
 {
-public:
-	int getLCA(int a, int b)
-	{
-		while (a != b) {
-			if (a > b) {
-				a = a / 2;
-			}
-			else if (a < b) {
-				b = b / 2;
-			}
+	for (int i = 2; i <= sqrt(num); i++) {
+		if (num % i == 0) {
+			return false;
 		}
-			return a;
 	}
-};
+	return true;
+}
 int main()
 {
+	int num;
+	cin >> num;
+	for (int i = num / 2; i >= 0; i--) {
+		if (Is_prime(i) && Is_prime(num - i)) {
+			cout << i << endl << num - i << endl;
+			break;
+		}
+	}
 	return 0;
 }
