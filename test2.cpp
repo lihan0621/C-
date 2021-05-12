@@ -1,24 +1,56 @@
-#include<iostream>
-#include<cmath>
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
 using namespace std;
-bool Is_prime(int num)
+int FindsubString(char* pch)
 {
-	for (int i = 2; i <= sqrt(num); i++) {
-		if (num % i == 0) {
-			return false;
+	int count = 0;
+	char* p1 = pch;
+	while (*p1 != '\0') {
+		if (*p1 == p1[1] - 1) {
+			p1++;
+			count++;
 		}
-	}
-	return true;
-}
-int main()
-{
-	int num;
-	cin >> num;
-	for (int i = num / 2; i >= 0; i--) {
-		if (Is_prime(i) && Is_prime(num - i)) {
-			cout << i << endl << num - i << endl;
+		else {
 			break;
 		}
 	}
+	int count2 = count;
+	while (*p1 != '\0') {
+		if (*p1 == p1[1] + 1) {
+			p1++;
+			count2--;
+		}
+		else {
+			break;
+		}
+	}
+	if (count2 == 0)
+		return count;
+	return 0;
+}
+void ModifyString(char* ptext)
+{
+	char* p1 = ptext;
+	char* p2 = p1;
+	while (*p1 != '\0') {
+		int count = FindsubString(p1);
+		if (count > 0) {
+			*p2++ = *p1;
+			sprintf(p2, "%i", count);
+			while (*p2 != '\0') {
+				p2++;
+			}
+			p1 += count + count + 1;
+		}
+		else {
+			*p2++ = *p1++;
+		}
+	}
+}
+int main()
+{
+	char text[32] = "XYBCDCBABABA";
+	ModifyString(text);
+	printf(text);
 	return 0;
 }
