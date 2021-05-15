@@ -1,41 +1,35 @@
 #include<iostream>
 #include<vector>
-#include<algorithm>
 using namespace std;
-int getLuckyPacket(vector<int>& x, int n, int pos, int sum, int multi)
+class Gloves
 {
-	int count = 0;
-	for (int i = pos; i < n; ++i) {
-		sum += x[i];
-		multi *= x[i];
-		//判断幸运与否
-		if (sum > multi) {
-			count += 1 + getLuckyPacket(x, n, i + 1, sum, multi);
+public:
+	int findMinimum(int n, vector<int> left, vector<int> right)
+	{
+		int sum = 0;
+		int left_sum = 0, left_min = INT_MAX;
+		int right_sum = 0, right_min = INT_MAX;
+		for (int i = 0; i < n; ++i) {
+			if (left[i] * right[i] == 0) {
+				sum += left[i] + right[i];
+			}
+			else {
+				left_sum += left[i];
+				left_min = left_min < left[i] ? left_min : left[i];
+				right_sum += right[i];
+				right_min = right_min < right[i] ? right_min : right[i];
+			}
 		}
-		else if (x[i] == 1) {
-			count += getLuckyPacket(x, n, i + 1, sum, multi);
-		}
-		else {
-			break;//回溯
-		}
-		sum -= x[i];
-		multi /= x[i];
-		//去重
-		while (i < n - 1 && x[i] == x[i + 1]) {
-			i++;
-		}
+		return sum + min(left_sum - left_min + 1, right_sum - right_min + 1) + 1;
 	}
-	return count;
-}
+};
 int main()
 {
 	int n;
 	cin >> n;
-	vector<int> x(n);
-	for (int i = 0; i < n; ++i) {
-		cin >> x[i];
-	}
-	sort(x.begin(), x.end());
-	cout << getLuckyPacket(x, n, 0, 0, 1) << endl;
+	vector<int> left = { 0, 7, 1, 6 };
+	vector<int> right = { 1, 5, 0, 6 };
+	Gloves a;
+	cout << a.findMinimum(n, left, right);
 	return 0;
 }
