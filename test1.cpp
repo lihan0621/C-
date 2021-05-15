@@ -1,35 +1,45 @@
 #include<iostream>
 using namespace std;
-//判断闰年
-bool isLeap(int year)
+/*
+int Count(size_t val)
 {
-	return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
-}
-//根据年和月获取相应月份对应的天数
-int getDaysByYM(int year, int month)
-{
-	int days[13] = { 29,31,28, 31,30,31,30,31,31,30,31,30,31 };
-	if (month == 2 && isLeap(year)) {
-		month = 0;
+	int count = 0;
+	for (int i = 0; i < 32; i++) {
+		if (val % 2 == 1) {
+			count++;
+		}
+		val /= 2;
 	}
-	return days[month];
+	return count;
 }
-//根据年月日获取相应的这一年的第几天
-int getDaysByYMD(int year, int month, int day)
+*/
+/*
+int Count(size_t val)
 {
-	int days = 0;
-	for (int i = 1; i < month; ++i) {
-		days += getDaysByYM(year, i);
+	int count = 0;
+	while(val) {
+		if (val &1==1) {
+			count++;
+		}
+		val >>= 1;
 	}
-	days += day;
-	return days;
+	return count;
+}
+*/
+int Count(size_t val)
+{
+	int count = 0;
+	while (val) {
+		val = val & val - 1;
+		count++;
+	}
+	return count;
 }
 int main()
 {
-	int year, month, day;
-	int days = 0;
-	cin >> year >> month >> day;
-	days = getDaysByYMD(year, month, day);
-	cout << days << endl;
+	size_t val;
+	cin >> val;
+	int one_count = Count(val);
+	cout << one_count << endl;
 	return 0;
 }
