@@ -1,86 +1,30 @@
 #include<iostream>
-#include<string>
-#include<algorithm>
 using namespace std;
-size_t addItem(size_t a, size_t b, size_t& sign)
+/*
+//迭代法求解
+int RabbitNums(int n)
 {
-	size_t sum = a + b + sign;
-	if (sum >= 10) {
-		sum -= 10;
-		sign = 1;
+	int sum = 0;
+	if (n <= 2) return 1;
+	int f, f1 = 1, f2 = 1;
+	for (int i = 3; i <= n; ++i) {
+		f = f1 + f2;
+		f1 = f2;
+		f2 = f;
 	}
-	else 
-		sign = 0;
-	return sum;
-}
-string addString(string& num1, string& num2)
+	return f;
+}*/
+//递归
+int Fib(int n) 
 {
-	reverse(num1.begin(), num1.end());
-	reverse(num2.begin(), num2.end());
-	size_t i, j;
-	i = j = 0;
-	string res = "";
-	size_t sum, sign = 0;
-	while (i < num1.size() && j < num2.size()) {
-		sum = addItem(num1[i] - '0', num2[j] - '0', sign);
-		//sum = num1[i] - '0' + num2[j] - '0' + sign;
-		//if (sum >= 10) {
-		//	sum -= 10;
-		//	sign = 1;
-		//}
-		//else
-		//	sign = 0;
-		res += (sum + '0');
-		i++;
-		j++;
-	}
-	while (i < num1.size()) {
-		sum = addItem(num1[i] - '0', 0, sign);
-		//sum += num1[i] - '0' + sign;
-		//if (sum >= 10) {
-		//	sum -= 10;
-		//	sign = 1;
-		//}
-		//else
-		//	sign = 0;
-		res += (sum + '0');
-		i++;
-	}
-	while (j < num2.size()) {
-		sum = addItem(0, num2[j] - '0', sign);
-		//sum += num2[j] - '0' + sign;
-		//if (sum >= 10) {
-		//	sum -= 10;
-		//	sign = 1;
-		//}
-		//else
-		//	sign = 0;
-		res += (sum + '0');
-		j++;
-	}
-	if (sign)
-		res += (sign + '0');
-	reverse(res.begin(), res.end());
-	return res;
-}
-bool isValid(const string& num)
-{
-	for (int i = 0; i < num.size(); i++) {
-		if (num[i] < '0' || num[i]>'9') {
-			return false;
-		}
-	}
-	return true;
+	if (n <= 2) return 1;
+	return Fib(n - 1) + Fib(n - 2);
 }
 int main()
 {
-	string num1, num2, res;
-	cin >> num1 >> num2;
-	if (isValid(num1) && isValid(num2)) {
-		res = addString(num1, num2);
-		cout << res << endl;
-	}
-	else
-		cout << "error" << endl;
+	int month = 0;
+	cin >> month;
+	int ret = Fib(month);
+	cout << ret << endl;
 	return 0;
 }
