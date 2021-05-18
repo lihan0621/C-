@@ -1,38 +1,86 @@
 #include<iostream>
 #include<string>
+#include<algorithm>
 using namespace std;
-string FindMax(const string& line)
+size_t addItem(size_t a, size_t b, size_t& sign)
 {
-	if (line.find("joker JOKER") != string::npos) {
-		return "joker JOKER";
+	size_t sum = a + b + sign;
+	if (sum >= 10) {
+		sum -= 10;
+		sign = 1;
 	}
-	//分开两手牌
-	int dash = line.find('-');
-	string car1 = line.substr(0, dash);
-	string car2 = line.substr(dash + 1);
-	//获取两手牌的张数
-	int car1_cnt = count(car1.begin(), car1.end(), ' ') + 1;
-	int car2_cnt = count(car2.begin(), car2.end(), ' ') + 1;
-	//获取两手牌的各自第一张牌
-	string car1_first = car1.substr(0, car1.find(' '));
-	string car2_first = car2.substr(0, car2.find(' '));
-	if (car1_cnt == car2_cnt) {//两手牌的类型相同
-		string str = "345678910JQKA2jokerJOKER";
-		if (str.find(car1_first) > str.find(car2_first))
-			return car1;
-		return car2;
+	else 
+		sign = 0;
+	return sum;
+}
+string addString(string& num1, string& num2)
+{
+	reverse(num1.begin(), num1.end());
+	reverse(num2.begin(), num2.end());
+	size_t i, j;
+	i = j = 0;
+	string res = "";
+	size_t sum, sign = 0;
+	while (i < num1.size() && j < num2.size()) {
+		sum = addItem(num1[i] - '0', num2[j] - '0', sign);
+		//sum = num1[i] - '0' + num2[j] - '0' + sign;
+		//if (sum >= 10) {
+		//	sum -= 10;
+		//	sign = 1;
+		//}
+		//else
+		//	sign = 0;
+		res += (sum + '0');
+		i++;
+		j++;
 	}
-	if (car1_cnt == 4)//说明是炸弹
-		return car1;
-	if (car2_cnt == 4)
-		return car2;
-	return "ERROR";
+	while (i < num1.size()) {
+		sum = addItem(num1[i] - '0', 0, sign);
+		//sum += num1[i] - '0' + sign;
+		//if (sum >= 10) {
+		//	sum -= 10;
+		//	sign = 1;
+		//}
+		//else
+		//	sign = 0;
+		res += (sum + '0');
+		i++;
+	}
+	while (j < num2.size()) {
+		sum = addItem(0, num2[j] - '0', sign);
+		//sum += num2[j] - '0' + sign;
+		//if (sum >= 10) {
+		//	sum -= 10;
+		//	sign = 1;
+		//}
+		//else
+		//	sign = 0;
+		res += (sum + '0');
+		j++;
+	}
+	if (sign)
+		res += (sign + '0');
+	reverse(res.begin(), res.end());
+	return res;
+}
+bool isValid(const string& num)
+{
+	for (int i = 0; i < num.size(); i++) {
+		if (num[i] < '0' || num[i]>'9') {
+			return false;
+		}
+	}
+	return true;
 }
 int main()
 {
-	string line, res;
-	getline(cin, line);
-	res = FindMax(line);
-	cout << res << endl;
+	string num1, num2, res;
+	cin >> num1 >> num2;
+	if (isValid(num1) && isValid(num2)) {
+		res = addString(num1, num2);
+		cout << res << endl;
+	}
+	else
+		cout << "error" << endl;
 	return 0;
 }
