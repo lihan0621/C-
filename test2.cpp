@@ -1,29 +1,35 @@
 #include<iostream>
-#include<string>
+#include<vector>
 using namespace std;
-bool strMach(const char* pattern, const char* str)
+//Õ·×ªÏà³ı·¨
+int GCD(int a, int b)
 {
-	if (*pattern == '\0' && *str == '\0')
-		return true;
-	if (*pattern == '\0' || *str == '\0')
-		return false;
-	if (*pattern == '?')
-		return strMach(pattern + 1, str + 1);
-	else if (*pattern == '*')
-		return strMach(pattern + 1, str + 1) || strMach(pattern, str + 1) || strMach(pattern + 1, str);
-	else if (*pattern == *str)
-		return strMach(pattern + 1, str + 1);
-	else
-		return false;
+	int c;
+	while (c = a % b) {
+		a = b;
+		b = c;
+	}
+	return b;
+}
+int getPowerVal(int n, int power)
+{
+	vector<int> num(n);
+	for (int i = 0; i < n; ++i) {
+		cin >> num[i];
+	}
+	for (int i = 0; i < n; ++i) {
+		if (power >= num[i])
+			power += num[i];
+		else
+			power += GCD(power, num[i]);
+	}
+	return power;
 }
 int main()
 {
-	string pattern, str;
-	cin >> pattern >> str;
-	bool ret = strMach(pattern.c_str(), str.c_str());
-	if (ret)
-		cout << "true" << endl;
-	else
-		cout << "false" << endl;
+	int n, a, power;
+	cin >> n >> a;
+	power = getPowerVal(n, a);
+	cout << power << endl;
 	return 0;
 }
