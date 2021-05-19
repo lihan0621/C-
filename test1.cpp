@@ -1,30 +1,54 @@
 #include<iostream>
+#include<string>
 using namespace std;
-/*
-//迭代法求解
-int RabbitNums(int n)
+//暴力求解
+char getFirstOneChar_1(const string& str)
 {
-	int sum = 0;
-	if (n <= 2) return 1;
-	int f, f1 = 1, f2 = 1;
-	for (int i = 3; i <= n; ++i) {
-		f = f1 + f2;
-		f1 = f2;
-		f2 = f;
+	int j = 0;
+	for (int i = 0; i < str.size(); ++i) {
+		for (j = 0; j < str.size(); ++j) {
+			if (j == i)
+				continue;
+			if (str[j] == str[i])
+				break;
+		}
+		if (j >= str.size())
+			return str[i];
 	}
-	return f;
-}*/
-//递归
-int Fib(int n) 
+	return -1;
+}
+//hash法
+char getFirstOneChar_2(const string& str)
 {
-	if (n <= 2) return 1;
-	return Fib(n - 1) + Fib(n - 2);
+	char hash[256] = { 0 };
+	for (int i = 0; i < str.size(); ++i)
+		hash[str[i]]++;
+	for (int i = 0; i < str.size(); ++i) {
+		if (hash[str[i]] == 1)
+			return str[i];
+	}
+	return -1;
+}
+//string类函数查找法
+char getFirstOneChar_3(const string& str)
+{
+	for (int i = 0; i < str.size(); ++i) {
+		int index1 = str.find(str[i]);
+		int index2 = str.rfind(str[i]);
+		if (index1 == index2)
+			return str[i];
+	}
+	return -1;
 }
 int main()
 {
-	int month = 0;
-	cin >> month;
-	int ret = Fib(month);
-	cout << ret << endl;
+	string str;
+	char res;
+	getline(cin, str);
+	res = getFirstOneChar_3(str);
+	if (res == -1)
+		cout << -1 << endl;
+	else 
+		cout << res << endl;
 	return 0;
 }
