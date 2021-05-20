@@ -1,54 +1,32 @@
 #include<iostream>
 #include<string>
+#include<vector>
 using namespace std;
-//暴力求解
-char getFirstOneChar_1(const string& str)
+int getMaxComSubstr(const string& str1, const string& str2)
 {
-	int j = 0;
-	for (int i = 0; i < str.size(); ++i) {
-		for (j = 0; j < str.size(); ++j) {
-			if (j == i)
-				continue;
-			if (str[j] == str[i])
-				break;
+	int len1 = str1.size();
+	int len2 = str2.size();
+	int max_len = 0;
+	vector<vector<int>> msc(len1, vector<int>(len2, 0));
+	for (int i = 0; i < len1; i++) {
+		for (int j = 0; j < len2; j++) {
+			if (str2[j] == str1[i]) {
+				if (i >= 1 && j >= 1)
+					msc[i][j] = msc[i - 1][j - 1] + 1;
+				else
+					msc[i][j] = 1;
+				if (msc[i][j] > max_len)
+					max_len = msc[i][j];
+			}
 		}
-		if (j >= str.size())
-			return str[i];
 	}
-	return -1;
-}
-//hash法
-char getFirstOneChar_2(const string& str)
-{
-	char hash[256] = { 0 };
-	for (int i = 0; i < str.size(); ++i)
-		hash[str[i]]++;
-	for (int i = 0; i < str.size(); ++i) {
-		if (hash[str[i]] == 1)
-			return str[i];
-	}
-	return -1;
-}
-//string类函数查找法
-char getFirstOneChar_3(const string& str)
-{
-	for (int i = 0; i < str.size(); ++i) {
-		int index1 = str.find(str[i]);
-		int index2 = str.rfind(str[i]);
-		if (index1 == index2)
-			return str[i];
-	}
-	return -1;
+	return max_len;
 }
 int main()
 {
-	string str;
-	char res;
-	getline(cin, str);
-	res = getFirstOneChar_3(str);
-	if (res == -1)
-		cout << -1 << endl;
-	else 
-		cout << res << endl;
+	string str1, str2;
+	cin >> str1 >> str2;
+	int max_len = getMaxComSubstr(str1, str2);
+	cout << max_len << endl;
 	return 0;
 }
