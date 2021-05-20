@@ -1,35 +1,23 @@
 #include<iostream>
-#include<vector>
+#include<string>
 using namespace std;
-//Õ·×ªÏà³ý·¨
-int GCD(int a, int b)
+void strReverse(string& str)
 {
-	int c;
-	while (c = a % b) {
-		a = b;
-		b = c;
+	int start = 0;
+	int end = str.size() - 1;
+	while (start < end) {
+		char tmp = str[start];
+		str[start] = str[end];
+		str[end] = tmp;
+		start++;
+		end--;
 	}
-	return b;
-}
-int getPowerVal(int n, int power)
-{
-	vector<int> num(n);
-	for (int i = 0; i < n; ++i) {
-		cin >> num[i];
-	}
-	for (int i = 0; i < n; ++i) {
-		if (power >= num[i])
-			power += num[i];
-		else
-			power += GCD(power, num[i]);
-	}
-	return power;
 }
 int main()
 {
-	int n, a, power;
-	cin >> n >> a;
-	power = getPowerVal(n, a);
-	cout << power << endl;
+	string str;
+	cin >> str;
+	strReverse(str);
+	cout << str << endl;
 	return 0;
 }
