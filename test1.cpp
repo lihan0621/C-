@@ -1,32 +1,63 @@
 #include<iostream>
 #include<string>
-#include<vector>
 using namespace std;
-int getMaxComSubstr(const string& str1, const string& str2)
-{
-	int len1 = str1.size();
-	int len2 = str2.size();
-	int max_len = 0;
-	vector<vector<int>> msc(len1, vector<int>(len2, 0));
-	for (int i = 0; i < len1; i++) {
-		for (int j = 0; j < len2; j++) {
-			if (str2[j] == str1[i]) {
-				if (i >= 1 && j >= 1)
-					msc[i][j] = msc[i - 1][j - 1] + 1;
-				else
-					msc[i][j] = 1;
-				if (msc[i][j] > max_len)
-					max_len = msc[i][j];
-			}
-		}
-	}
-	return max_len;
-}
 int main()
 {
-	string str1, str2;
-	cin >> str1 >> str2;
-	int max_len = getMaxComSubstr(str1, str2);
-	cout << max_len << endl;
+	int n;
+	string cmd;
+	cin >> n >> cmd;
+	//将n首歌进行编号1~n,其中num代表当前光标所在的歌曲编号,first代表当前页的第一首歌曲的编号
+	int num = 1, first = 1;
+	if (n <= 4) {//歌曲总数 <= 4
+		for (int i = 0; i < cmd.size(); ++i) {
+			//解析命令
+			if (num == 1 && cmd[i] == 'U') {
+				num = n;
+			}
+			else if (num == n && cmd[i] == 'D') {
+				num = 1;
+			}
+			else if (cmd[i] == 'D') {
+				num--;
+			}
+			else {
+				num++;
+			}
+		}
+		for (int i = 1; i <= n; ++i) {
+			cout << i << " ";
+		}
+		cout << endl;
+		cout << num << endl;
+	}
+	else {//歌曲总数 > 4
+		for (int i = 0; i < cmd.size(); ++i) {
+			//解析命令
+			if (first == 1 && num == 1 && cmd[i] == 'U') {
+				first = n - 3;
+				num = n;
+			}
+			else if (first == n - 3 && num == n && cmd[i] == 'D')
+				first = num = 1;
+			else if (first != 1 && num == first && cmd[i] == 'U') {
+				first--;
+				num--;
+			}
+			else if (first != n - 3 && num == first + 3 && cmd[i] == 'D') {
+				first++;
+				num++;
+			}
+			else if (cmd[i] == 'U')
+				num--;
+			else
+				num++;
+		}
+		for (int i = first; i <= first + 3; ++i) {
+			cout << i << " ";
+		}
+		cout << endl;
+		cout << num << endl;
+	}
+
 	return 0;
 }
