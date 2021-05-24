@@ -1,63 +1,41 @@
 #include<iostream>
 #include<string>
+#include<vector>
 using namespace std;
+int minDistance(const string& str1, const string& str2)
+{
+	if (str1.empty() || str2.empty())
+		return max(str1.size(), str2.size());
+	int len1 = str1.size();
+	int len2 = str2.size();
+	vector<vector<int>> f(len1 + 1, vector<int>(len2 + 1, 0));
+	//初始化距离
+	for (int i = 0; i <= len1; ++i)
+		f[i][0] = i;
+	for (int j = 0; j <= len2; ++j)
+		f[0][j] = j;
+	for (int i = 1; i <= len1; ++i) {
+		for (int j = 1; j <= len2; ++j) {
+			if (str2[j - 1] == str1[i - 1]) {
+				f[i][j] = 1 + min(f[i - 1][j], f[i][j - 1]);
+				//由于字符相同,所以距离不发生变化
+				f[i][j] = min(f[i][j], f[i - 1][j - 1]);
+			}
+			else{
+				f[i][j] = 1 + min(f[i - 1][j], f[i][j - 1]);
+				//由于字符不相同,所以距离+1
+				f[i][j] = min(f[i][j], 1 + f[i - 1][j - 1]);
+			}
+			
+		}
+	}
+	return f[len1][len2];
+}
 int main()
 {
-	int n;
-	string cmd;
-	cin >> n >> cmd;
-	//将n首歌进行编号1~n,其中num代表当前光标所在的歌曲编号,first代表当前页的第一首歌曲的编号
-	int num = 1, first = 1;
-	if (n <= 4) {//歌曲总数 <= 4
-		for (int i = 0; i < cmd.size(); ++i) {
-			//解析命令
-			if (num == 1 && cmd[i] == 'U') {
-				num = n;
-			}
-			else if (num == n && cmd[i] == 'D') {
-				num = 1;
-			}
-			else if (cmd[i] == 'D') {
-				num--;
-			}
-			else {
-				num++;
-			}
-		}
-		for (int i = 1; i <= n; ++i) {
-			cout << i << " ";
-		}
-		cout << endl;
-		cout << num << endl;
-	}
-	else {//歌曲总数 > 4
-		for (int i = 0; i < cmd.size(); ++i) {
-			//解析命令
-			if (first == 1 && num == 1 && cmd[i] == 'U') {
-				first = n - 3;
-				num = n;
-			}
-			else if (first == n - 3 && num == n && cmd[i] == 'D')
-				first = num = 1;
-			else if (first != 1 && num == first && cmd[i] == 'U') {
-				first--;
-				num--;
-			}
-			else if (first != n - 3 && num == first + 3 && cmd[i] == 'D') {
-				first++;
-				num++;
-			}
-			else if (cmd[i] == 'U')
-				num--;
-			else
-				num++;
-		}
-		for (int i = first; i <= first + 3; ++i) {
-			cout << i << " ";
-		}
-		cout << endl;
-		cout << num << endl;
-	}
-
+	string str1, str2;
+	cin >> str1 >> str2;
+	int ret = minDistance(str1, str2);
+	cout << ret << endl;
 	return 0;
 }
