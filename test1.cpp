@@ -1,20 +1,29 @@
+//#include<iostream>
+//using namespace std;
+//int main()
+//{
+//	double n, a;
+//	cin >> n >> a;
+//	if (a >= (n * 2 * 3.14))
+//		cout << "Yes" << endl;
+//	else
+//		cout << "No" << endl;
+//	return 0;
+//}
 #include<iostream>
-#include<vector>
 using namespace std;
+int Jump(int num)
+{
+	if (num == 1)
+		return 1;
+	else
+		return 2 * Jump(num - 1);
+}
 int main()
 {
-    vector<int> f_arr = { 0, 1, 2 };
-    for (int i = 3; i < 10001; ++i) {
-        f_arr.push_back((f_arr[i - 1] + f_arr[i - 2]) % 10000);
-    }
-    int n = 0;
-    while (cin >> n) {
-        for (int i = 0; i < n; ++i) {
-            int t;
-            cin >> t;
-            printf("%04d", f_arr[t]);
-        }
-        printf("\n");
-    }
-    return 0;
+	int num;
+	cin >> num;
+	int ret = Jump(num);
+	cout << ret << endl;
+	return 0;
 }
