@@ -1,29 +1,37 @@
 #include<iostream>
-#include<string>
 using namespace std;
-int GetRoot(int num)
+class A
 {
-    int sum = 0;
-    while (num) {
-        sum += num % 10;
-        num = num / 10;
-        if (num == 0 && sum / 10 != 0) {
-            num = sum;
-            sum = 0;
-        }
-    }
-    return sum;
+public:
+	A()
+	{
+		cout << "A::A()" << endl;
+	}
+	~A()
+	{
+		cout << "A::~A()" << endl;
+	}
+	int a = 0;
+};
+class B :public A
+{
+public:
+	B()
+	{
+		cout << "B::B()" << endl;
+	}
+	~B()
+	{
+		cout << "B::~B()" << endl;
+	}
+	int b = 0;
+};
+void f()
+{
+	B b;
 }
 int main()
 {
-    string str;
-    while (cin >> str) {
-        int num = 0;
-        for (int i = 0; i < str.size(); ++i) {
-            num += str[i] - '0';
-        }
-        int ret = GetRoot(num);
-        cout << ret << endl;
-    }
-    return 0;
+	f();
+	return 0;
 }
