@@ -1,29 +1,39 @@
+//Ð¡ºï×Ó·ÖÌÒ
 //#include<iostream>
-//#define ADD(x, y)  (x + y)
-//#define CMP(x, y)  (x > y)
 //using namespace std;
 //int main()
 //{
-//	double a, b, c;
-//	cin >> a >> b >> c;
-//	//if (a + b > c && a + c > b && b + c > a)
-//	if (CMP(ADD(a, b), c) && CMP(ADD(a, c), b) && CMP(ADD(b, c), a))
-//		cout << "Yes" << endl;
-//	else
-//		cout << "No" << endl;
+//	int n;
+//	cin >> n;
+//	if (n == 0)
+//		return 0;
+//	long total = pow(5, n) - 4;
+//	long left = pow(4, n) + n - 4;
+//	cout << total << " " << left << endl;
 //	return 0;
 //}
 #include<iostream>
+#include<vector>
 using namespace std;
+class Solution
+{
+public:
+	int addInOddEven(vector<int>& arr, int len)
+	{
+		int i = 0, j = 1;
+		while (i < len && j < len) {
+			if (arr[len - 1] % 2 == 0) {
+				swap(arr[len - 1], arr[i]);
+				i += 2;
+			}
+			else {
+				swap(arr[len - 1], arr[j]);
+				j += 2;
+			}
+		}
+	}
+};
 int main()
 {
-	int num1, num2;
-	cin >> num1 >> num2;
-	while (num2) {
-		int tmp = num1 ^ num2;
-		num2 = ((num1 & num2) << 1);
-		num1 = tmp;
-	}
-	cout << num1 << endl;
 	return 0;
 }
