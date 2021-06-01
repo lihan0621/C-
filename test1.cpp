@@ -1,39 +1,25 @@
-//Ð¡ºï×Ó·ÖÌÒ
-//#include<iostream>
-//using namespace std;
-//int main()
-//{
-//	int n;
-//	cin >> n;
-//	if (n == 0)
-//		return 0;
-//	long total = pow(5, n) - 4;
-//	long left = pow(4, n) + n - 4;
-//	cout << total << " " << left << endl;
-//	return 0;
-//}
 #include<iostream>
-#include<vector>
+#include<math.h>
 using namespace std;
-class Solution
+int Factornum(int n)
 {
-public:
-	int addInOddEven(vector<int>& arr, int len)
-	{
-		int i = 0, j = 1;
-		while (i < len && j < len) {
-			if (arr[len - 1] % 2 == 0) {
-				swap(arr[len - 1], arr[i]);
-				i += 2;
-			}
-			else {
-				swap(arr[len - 1], arr[j]);
-				j += 2;
-			}
+	int count = 0;
+	for (int i = 2; i < sqrt(n); ++i) {
+		if (n % i == 0) {
+			while (n % i == 0)
+				n /= i;
+			count++;
 		}
 	}
-};
+	if (n != 1)
+		count++;
+	return count;
+}
 int main()
 {
+	int n;
+	cin >> n;
+	int ret = Factornum(n);
+	cout << ret << endl;
 	return 0;
 }
