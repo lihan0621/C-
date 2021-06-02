@@ -1,76 +1,47 @@
 #include<stdio.h>
-#include<string.h>
+struct Test
+{
+	int Num;
+	char* pcName;
+	short sDate;
+	char cha[2];
+	short sBa[4];
+}*p = NULL;
 int main()
 {
-	//int a[] = { 1,2,3,4 };
-	//printf("%d\n", sizeof(a));        //16
-	//printf("%d\n", sizeof(a + 0));    //4    a + 0得到int *
-	//printf("%d\n", sizeof(*a));       //4    *a得到了int
-	//printf("%d\n", sizeof(a + 1));    //4   a + 1得到了int*
-	//printf("%d\n", sizeof(a[1]));     //4   a[1]得到了int
-	//printf("%d\n", sizeof(&a));       //数组指针  &a   int(*)[4]
-	//printf("%d\n", sizeof(*&a));	  //16   &a=>int(*)[4] 再解引用就成了数组
-	//printf("%d\n", sizeof(&a + 1));	  //&a int(*)[4] 再+1还是数组指针
-	//printf("%d\n", sizeof(&a[0]));	  //4 a[0]得到int &得到int*
-	//printf("%d\n", sizeof(&a[0] + 1));//4             +1还是4 
-	//char arr[] = { 'a','b','c','d','e','f' };
-	//printf("%d\n", sizeof(arr));		//6  数组里有 6 个char
-	//printf("%d\n", sizeof(arr + 0));	//4  arr + 0得到了char*
-	//printf("%d\n", sizeof(*arr));		//1  *arr得到了一个char
-	//printf("%d\n", sizeof(arr[1]));		//1 arr[1]得到了一个char
-	//printf("%d\n", sizeof(&arr));		//4   char(*)[6]
-	//printf("%d\n", sizeof(&arr + 1));	//4   char(*)[6]
-	//printf("%d\n", sizeof(&arr[0] + 1));//4	   a[0]得到char再&得到char*	
-	////只要当前字符数组不是字符串, 就不能使用str系列函数
-	//printf("%d\n", strlen(arr));
-	//printf("%d\n", strlen(arr + 0));
-	////char 和 const char* 不是一个类型
-	//printf("%d\n", strlen(*arr));//未定义行为.错的更离谱
-	//printf("%d\n", strlen(arr[1]));
-	//printf("%d\n", strlen(&arr));
-	//printf("%d\n", strlen(&arr + 1));
-	//printf("%d\n", strlen(&arr[0] + 1));
-	//char arr[] = "abcdef";
-	//printf("%d\n", sizeof(arr));
-	//printf("%d\n", sizeof(arr + 0));
-	//printf("%d\n", sizeof(*arr));
-	//printf("%d\n", sizeof(arr[1]));
-	//printf("%d\n", sizeof(&arr));
-	//printf("%d\n", sizeof(&arr + 1));
-	//printf("%d\n", sizeof(&arr[0] + 1));
-	//printf("%d\n", strlen(arr));
-	//printf("%d\n", strlen(arr + 0));
-	//printf("%d\n", strlen(*arr));
-	//printf("%d\n", strlen(arr[1]));
-	//printf("%d\n", strlen(&arr));
-	//printf("%d\n", strlen(&arr + 1));
-	//printf("%d\n", strlen(&arr[0] + 1));
-	//char* p = "abcdef";
-	//printf("%d\n", sizeof(p));
-	//printf("%d\n", sizeof(p + 1));
-	//printf("%d\n", sizeof(*p));
-	//printf("%d\n", sizeof(p[0]));
-	//printf("%d\n", sizeof(&p));
-	//printf("%d\n", sizeof(&p + 1));
-	//printf("%d\n", sizeof(&p[0] + 1));
-	//printf("%d\n", strlen(p));
-	//printf("%d\n", strlen(p + 1));
-	//printf("%d\n", strlen(*p));
-	//printf("%d\n", strlen(p[0]));
-	//printf("%d\n", strlen(&p));
-	//printf("%d\n", strlen(&p + 1));
-	//printf("%d\n", strlen(&p[0] + 1));
-	//int a[3][4] = { 0 };
-	//printf("%d\n", sizeof(a));
-	//printf("%d\n", sizeof(a[0][0]));
-	//printf("%d\n", sizeof(a[0]));
-	//printf("%d\n", sizeof(a[0] + 1));
-	//printf("%d\n", sizeof(*(a[0] + 1)));
-	//printf("%d\n", sizeof(a + 1));
-	//printf("%d\n", sizeof(*(a + 1)));
-	//printf("%d\n", sizeof(&a[0] + 1));
-	//printf("%d\n", sizeof(*(&a[0] + 1)));
-	//printf("%d\n", sizeof(*a));
-	//printf("%d\n", sizeof(a[3]));
+	//int* p = NULL;
+	//printf("%p\n", p);
+	//printf("%x\n", p);
+	//printf("%p\n", p + 0x1);
+	//printf("%p\n", (unsigned long)p + 0x1);
+	//printf("%p\n", (unsigned int*)p + 0x1);
+	//int a[4] = { 1, 2, 3, 4 };
+	//int* ptr1 = (int*)(&a + 1);
+	//int* ptr2 = (int*)((int)a + 1);
+	//printf("%x,%x", ptr1[-1], *ptr2);
+	//int a[3][2] = { (0, 1), (2, 3), (4, 5) };
+	//int* p;
+	//p = a[0];
+	//printf("%d", p[0]);
+	//int a[5][5];
+	//int(*p)[4];
+	//p = a;
+	////printf("a_ptr=%#p,p_ptr=%#p\n", &a[4][2], &p[4][2]);
+	//printf("%p,%d\n", &p[4][2] - &a[4][2], &p[4][2] - &a[4][2]);
+	//int aa[2][5] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+	//int* ptr1 = (int*)(&aa + 1);
+	//int* ptr2 = (int*)(*(aa + 1));
+	//printf("%d,%d", *(ptr1 - 1), *(ptr2 - 1));
+	//char* a[] = { "work","at","alibaba" };
+	//char** pa = a;
+	//pa++;
+	//printf("%s\n", *pa);
+	char* c[] = { "ENTER","NEW","POINT","FIRST" };
+	char** cp[] = { c + 3,c + 2,c + 1,c };
+	char*** cpp = cp;
+	printf("%s\n", **++cpp);
+	printf("%s\n", *-- * ++cpp + 3);
+	printf("%s\n", *cpp[-2] + 3);
+	printf("%s\n", cpp[-1][-1] + 1);
 	return 0;
 }
