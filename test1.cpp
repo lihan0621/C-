@@ -1,25 +1,32 @@
 #include<iostream>
+#include<vector>
 #include<math.h>
 using namespace std;
-int Factornum(int n)
+void factorization(int a, vector<int>& factors)
 {
-	int count = 0;
-	for (int i = 2; i < sqrt(n); ++i) {
-		if (n % i == 0) {
-			while (n % i == 0)
-				n /= i;
-			count++;
+	factors.clear();
+	for (int i = 2; a > 1 && i <= sqrt(a); ++i) {
+		while (a % i == 0) {
+			factors.push_back(i);
+			a /= i;
 		}
 	}
-	if (n != 1)
-		count++;
-	return count;
+	if (a > 1)
+		factors.push_back(a);
 }
 int main()
 {
-	int n;
-	cin >> n;
-	int ret = Factornum(n);
-	cout << ret << endl;
+	int a;
+	vector<int> factors;
+	while (cin >> a) {
+		factorization(a, factors);
+		cout << a << " = ";
+		for (vector<int>::const_iterator p = factors.begin(); p != factors.end(); ++p) {
+			cout << *p;
+			if (p != factors.end() - 1)
+				cout << " * ";
+		}
+		printf("\n");
+	}
 	return 0;
 }
