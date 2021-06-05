@@ -2,25 +2,19 @@
 using namespace std;
 
 int main() {
-	long long arr[100000];
-	int border = -1;
-	arr[0] = 1;
-	arr[1] = 2;
-	for (int i = 2; i < 100000; ++i) {
-		long long next = arr[i - 1] + arr[i - 2];
-		if (border == -1 && next >= 100000) {
-			border = i + 1;
-		}
-		arr[i] = next % 1000000;
+	long long fib[80];
+	fib[0] = 1;
+	fib[1] = 1;
+	for (int i = 2; i < 80; i++) {
+		fib[i] = fib[i - 1] + fib[i - 2];
 	}
-	int n;
-	cin >> n;
-	long long f = arr[n - 1];
-	if (n >= border) {
-		printf("%06lld\n", f);
+	int from, to;
+	cin >> from >> to;
+	long long count = 0;
+	for (int i = from - 1; i <= to - 1; ++i) {
+		count += fib[i];
 	}
-	else {
-		printf("%lld\n", f);
-	}
+	cout << count << endl;	
+
 	return 0;
-}
+}		
