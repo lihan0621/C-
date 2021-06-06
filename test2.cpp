@@ -2,19 +2,17 @@
 using namespace std;
 
 int main() {
-	long long fib[80];
-	fib[0] = 1;
-	fib[1] = 1;
-	for (int i = 2; i < 80; i++) {
-		fib[i] = fib[i - 1] + fib[i - 2];
+	int n;
+	while (cin >> n) {
+		long long f0 = 1;
+		long long f1 = 1;
+		long long ret = 0;
+		for (int i = 2; i <= n; i++) {
+			ret = f0 + f1;
+			f0 = f1;
+			f1 = ret;
+		}
+		cout << ret << endl;
 	}
-	int from, to;
-	cin >> from >> to;
-	long long count = 0;
-	for (int i = from - 1; i <= to - 1; ++i) {
-		count += fib[i];
-	}
-	cout << count << endl;	
-
 	return 0;
-}		
+}
