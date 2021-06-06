@@ -1,18 +1,28 @@
-#include <iostream>
-#include <string>
+#include<iostream>
+#include<string>
 using namespace std;
 
-int cut(string s, string t) {
-	int i = s.find(t);
-	if (i == string::npos) {
-		return 0;
-	}
-	return 1 + cut(s.substr(i + t.size()), t);
-}
 int main() {
-	string s, t;
-	cin >> s >> t;
-	int ans = cut(s, t);
-	cout << ans << endl;
+	int n;
+	while (cin >> n) {
+		getchar();
+		string name;
+		for (int i = 0; i < n; ++i) {
+			getline(cin, name);
+			if (name.find(',') == string::npos || name.find(' ') == string::npos) {
+				cout << "\"" << name << "\"";
+			}
+			else {
+				cout << name;
+			}
+			if (i != n - 1) {
+				cout << ", ";
+			}
+			else {
+				cout << endl;
+			}
+		}
+	}
+
 	return 0;
 }
