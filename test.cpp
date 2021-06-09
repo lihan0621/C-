@@ -1,95 +1,132 @@
+#include<string>
 #include<iostream>
 #include<stdlib.h>
 using namespace std;
-class Date
-{
-public:
-	void Display()
-	{
-		cout << _year << "-" << _month << "-" << _day << endl;
-	}
-	void SetDate(int year, int month, int day)
-	{
-		_year = year;
-		_month = month;
-		_day = day;
-	}
-private:
-	int _year; // 年
-	int _month; // 月
-	int _day; // 日
-};
 void test()
 {
-	Date d1, d2;
-	d1.SetDate(2018, 5, 1);
-	d2.SetDate(2018, 7, 1);
-	d1.Display();
-	d2.Display();
+	//范围for：可以访问范围确定的序列
+	int arr[] = { 1, 2, 3, 4, 5 };
+	for (const auto& e : arr)
+	{
+		cout << e << " ";
+	}
+	cout << endl;
+	for (auto& e : arr)
+	{
+		e = 10;
+		cout << e << " ";
+	}
+	cout << endl;
+	for (int i = 0; i < 5; ++i)
+	{
+		cout << arr[i] << " ";
+	}
+	cout << endl;
 }
+
+
+
 //void test()
 //{
-//	int a = 1;
-//	char* p = (char*)&a;
-//	if (*p)
-//		cout << "小端" << endl;
-//	else
-//	cout << "大端" << endl;
-//}
-//struct B
-//{
-//	int a;
-//	int b;
-//	double d;
-//	int e;
-//};
-//struct A
-//{
-//	char a;
-//	double b;
-//	char d;
-//	B objB;
-//};
-//
-//void test()
-//{
-//	cout << sizeof(B) << endl;
-//	cout << sizeof(A) << endl;
-//}
-//class A
-//{
-//public:
-//	int fun(int a,int b)
+//	//反向迭代器
+//	string str = "12345";
+//	//最后一个元素的位置
+//	string::reverse_iterator it = str.rbegin();
+//	while (it != str.rend())
 //	{
-//		return a + b;
+//		cout << *it << " ";
+//		//反向移动
+//		++it;
 //	}
-//private:
-//	int a;
-//	int b;
-//};
-//class B
-//{
-//private:
-//	int a;
-//	int b;
-//};
-//class C
-//{
-//public:
-//	int fun(int a, int b)
+//	string::const_reverse_iterator cit = str.crbegin();
+//	while (cit != str.crend())
 //	{
-//		return a + b;
+//		cout << *cit << " ";
+//		++cit;
 //	}
-//};
-//class D
-//{};
+//	//只读的反向迭代器
+//	const string str2 = "abcde";
+//	string::const_reverse_iterator it2 = str2.rbegin();
+//	while (it2 != str2.rend())
+//	{
+//		cout << *it2 << " ";
+//		//只读迭代器不支持修改
+//		//*it2 =  'a';
+//		++it2;
+//	}
+//}
+
+
+
 //void test()
 //{
-//	cout << sizeof(A) << endl;
-//	cout << sizeof(B) << endl;
-//	cout << sizeof(C) << endl;
-//	cout << sizeof(D) << endl;
+//	//正向迭代器
+//	string str = "12345";
+//	//起始位置的迭代器
+//	string::iterator it = str.begin();
+//	for (; it != str.end(); ++it)
+//	{
+//		//迭代器的解引用
+//		cout << *it << " " ;
+//		//可以通过迭代器进行内容的修改
+//		*it = 'a';
+//	}
+//	const string str2 = "abcde";
+//		//只读迭代器
+//		string::const_iterator it2= str2.begin();
+//	while (it2 != str2.end())
+//	{
+//		cout << *it2 << " ";
+//		//只读迭代器不能修改内容
+//		//*it2 = 'a';
+//		++it2;
+//	}
 //}
+
+
+//void test()
+//{
+//	const string str = "12345";
+//	string str2 = "12345";
+//	//const对象，调用接口：const char& operator[](size_t pos)const
+//	char ch = str[3];
+//	const char& ref = str[3];
+//	//非const对象，调用接口：char& operator[](size_t pos)
+//	char& ref2 = str2[3];
+//	str2[3] = 'a';
+//	str2.at(3) = 'b';
+//}
+
+
+//void test()
+//{
+//	/*default (1)
+//		string();*/
+//	//创建空的string对象
+//	string str;
+//	/*copy(2)
+//	string(const string& str);*/
+//	string copy(str);
+//	/*from c - string(4)
+//		string(const char* s);*/
+//	string str2("abc");
+//	/*substring(3)
+//		string(const string& str, size_t pos, size_t len = npos);*/
+//	string substr(str2, 1, 2);//bc
+//	/*from sequence(5)
+//		string(const char* s, size_t n);*/
+//	string str3("12345678", 5);//12345
+//	/*fill(6)
+//		string(size_t n, char c);*/
+//	string str4(10, 'a');//"aaaaaaaaaa"
+//	string str5 = "abcde";//单参构造的隐式类型转换
+//	str5 = str4;
+//	str5 = "123";
+//	str5 = 'b';
+//}
+
+
+
 int main()
 {
 	test();
