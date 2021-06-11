@@ -1,128 +1,87 @@
 #include<iostream>
 #include<vector>
-#include<queue>
-#include<list>
 using namespace std;
-template <class T>
-class Queue
+template<class T>
+class PriorityQueue
 {
-	
 public:
+	void shiftUp(int child)
+	{
+		int parent = (child - 1) / 2;
+		//调整
+		while (child > 0)
+		{
+			if (v[parent] < v[child])
+			{
+				swap(v[parent], v[child]);
+				child = parent;
+				parent = (child - 1) / 2;
+			}
+			else
+				break;
+		}
+	}
+	void shiftDown()
+	{
+		int parent = 0;
+		int child = 2 * parent + 1;
+		while (child < v.size())
+		{
+			//从左右孩子中找到最大值
+			if (child + 1 < v.size() && v[child] < v[child + 1])
+				++child;
+			if (v[parent] < v[child])
+			{
+				swap(v[parent], v[child]);
+				parent = child;
+				child = 2 * parent + 1;
+			}
+			else
+				break;
+		}
+	}
 	void push(const T& val)
 	{
-		_q.push_back(val);
-		//_q.push_front(val);
+		v.push_back(val);
+		shiftUp(v.size() - 1);
 	}
 	void pop()
 	{
-		_q.pop_front();
-		//_q.pop_back();
+		swap(v[0], v[v.size() - 1]);
+		v.pop_back();
+		shiftDown();
 	}
-	T& front()
+	T& top()
 	{
-		return _q.front();
-		//return _q.back();
+		return v[0];
+		//return v.front();
 	}
-	size_t size()
+	size_t size() const
 	{
-		return _q.size();
+		return v.size();
 	}
-	bool empty()
+	bool empty() const
 	{
-		return _q.empty();
+		return v.empty();
 	}
-	//用list实现
 private:
-	list<T> _q;
+	vector<T> v;
 };
 void test()
 {
-	Queue<int> q;
+	PriorityQueue<int> q;
+	q.push(100);
 	q.push(1);
-	q.push(2);
-	q.push(3);
-	q.push(4);
+	q.push(150);
+	q.push(10);
+	q.push(20);
 	while (!q.empty())
 	{
-		cout << q.front() << " ";
+		cout << q.top() << " ";
 		q.pop();
 	}
 	cout << endl;
 }
-template <class t>
-class stack
-{
-public:
-	void push(const t& val)
-	{
-		_st.push_back(val);
-	}
-	void pop()
-	{
-		 _st.pop_back();
-	}
-	t& top()
-	{
-		return _st.back();
-	}
-	size_t size() const 
-	{
-		return _st.size();
-	}
-	bool empty() const
-	{
-		return _st.empty();
-	}
-	//用vector实现stack
-private:
-	vector<t> _st;
-};
-#include<list>
-template<class t>
-class Stack2
-{
-public:
-	void push(const t& val)
-	{
-		_st.push_front(val);
-		//_st.push_back(val);
-	}
-	void pop()
-	{
-		_st.pop_front();
-		//_st.pop_back();
-	}
-	t& top()
-	{
-		return _st.front();
-		//return _st.back();
-	}
-	size_t size() const
-	{
-		return _st.size();
-	}
-	bool empty() const
-	{
-		return _st.empty();
-	}
-private:
-	list<t> _st;
-};
-//void test()
-//{
-//	//Stack<int> st;
-//	Stack2 <int> st;
-//	st.push(1);
-//	st.push(2);
-//	st.push(3);
-//	st.push(4);
-//	while (!st.empty())
-//	{
-//		cout << st.top() << " ";
-//		st.pop();
-//	}
-//	cout << endl;
-//}
 int main()
 {
 	test();
