@@ -1,15 +1,28 @@
 #include <iostream>
+#include <string>
+#include <vector>
 using namespace std;
-int main() {
-	long long d[21] = { 0 ,0 ,1 };
-	long long f[21] = { 1, 1, 2 };
-	for (int i = 3; i <= 20; i++) {
-		d[i] = (i - 1) * (d[i] - 1 + d[i - 2]);
-		f[i] = f[i - 1] * i;
+
+int LCS(const string& m, const string& n) {
+	int mlen = m.size();
+	int nlen = n.size();
+	vector<vector<int>> dp(mlen + 1, vector<int> (nlen + 1));
+	for (int i = 1; i <= mlen; ++i) {
+		for (int j = 1; j <= nlen; ++j) {
+			if (m[i - 1] == n[j - 1]) {
+				dp[i][j] = dp[i - 1][j - 1] + 1;
+			}
+			else {
+				dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+			}
+		}
 	}
-	int n;
-	while (cin >> n) {
-		printf("%.2f%%\n", 100.0 * d[n] / f[n]);
+	return dp[mlen][nlen];
+}
+int main() {
+	string m, n;
+	while (cin >> m >> n) {
+		cout << LCS(m, n) << endl;
 	}
 	return 0;
 }
