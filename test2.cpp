@@ -1,28 +1,33 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
-int LCS(const string& m, const string& n) {
-	int mlen = m.size();
-	int nlen = n.size();
-	vector<vector<int>> dp(mlen + 1, vector<int> (nlen + 1));
-	for (int i = 1; i <= mlen; ++i) {
-		for (int j = 1; j <= nlen; ++j) {
-			if (m[i - 1] == n[j - 1]) {
-				dp[i][j] = dp[i - 1][j - 1] + 1;
+int main() {
+	int n;
+	while (cin >> n) {
+		vector<string> path(n);
+		for (int i = 0; i < n; ++i) {
+			cin >> path[i];
+		}
+		sort(path.begin(), path.end());
+		vector<bool> flag(n, true);
+		for (int i = 0; i < n - 1; ++i) {
+			if (path[i] == path[i + 1]) {
+				flag[i] = false;
 			}
-			else {
-				dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+			if (path[i].size() < path[i + 1].size() && (path[i + 1].substr(0, path[i].size()) == path[i]
+				&& path[i + 1][path[i].size()] == '/')) {
+				flag[i] = false;
 			}
 		}
-	}
-	return dp[mlen][nlen];
-}
-int main() {
-	string m, n;
-	while (cin >> m >> n) {
-		cout << LCS(m, n) << endl;
+		for (int i = 0; i < n; ++i) {
+			if (flag[i]) {
+				cout << "mkdir -p" << path[i] << endl;
+			}
+		}
+		cout << endl;
 	}
 	return 0;
 }
