@@ -1,107 +1,73 @@
-/*
-	DFS问题
-*/
 #include <iostream>
+#include <string>
 #include <vector>
+#include <set>
+#include <map>
+#include <algorithm>
+#include <functional>
+#include <unordered_map>
+#include <unordered_set>
+#include <exception>
+#include <iomanip>
+#include <memory>
+#include <sstream>
+
+#define INF 1000000
 using namespace std;
 
-int direct[4][2] = { {-1, 0}, {1, 0}, {0, -1}, {0, 1} };
-void dfs(vector<vector<char>>& map, int row, int col, vector<vector<bool>>& flag, size_t& count) {
-	//如果该位置已经遍历过了,则不用遍历
-	if (flag[row][col]) {
-		return;
-	}
-	//遍历该位置
-	flag[row][col] = true;
-	//如果该位置是白色瓷砖,则停止搜索
-	if (map[row][col] == '#') {
-		return;
-	}
-	//否则为黑瓷砖
-	count++;
-	//然后继续向该位置的其他四个方向进行遍历
-	for (int i = 0; i < 4; ++i) {
-		int x = row + direct[i][0];
-		int y = col + direct[i][1];
-		if ((x >= 0 && x < map.size()) && (y >= 0 && y < map[0].size())) {
-			dfs(map, x, y, flag, count);
-		}
-	}
-}
 int main() {
-	int m, n;
-	while (cin >> m >> n) {
-		if (m * n == 0) {
-			continue;
-		}
-		//接收矩阵,并记录起点的位置
-		vector<vector<char>> map(m, vector<char>(n));
-		vector<vector<bool>> flag(m, vector<bool>(n, false));
-		int row = 0;
-		int col = 0;
-		for (int i = 0; i < m; ++i) {
-			for (int j = 0; j < n; ++j) {
-				cin >> map[i][j];
-				if (map[i][j] == '@') {
-					row = i;
-					col = j;
+	unordered_map<char, char> dic;
+	dic.emplace('A', 2);
+	dic.emplace('B', 2);
+	dic.emplace('C', 2);
+	dic.emplace('D', 3);
+	dic.emplace('E', 3);
+	dic.emplace('F', 3);
+	dic.emplace('G', 4);
+	dic.emplace('H', 4);
+	dic.emplace('I', 4);
+	dic.emplace('J', 5);
+	dic.emplace('K', 5);
+	dic.emplace('L', 5);
+	dic.emplace('M', 6);
+	dic.emplace('N', 6);
+	dic.emplace('O', 6);
+	dic.emplace('P', 7);
+	dic.emplace('Q', 7);
+	dic.emplace('R', 7);
+	dic.emplace('S', 7);
+	dic.emplace('T', 8);
+	dic.emplace('U', 8);
+	dic.emplace('V', 8);
+	dic.emplace('W', 9);
+	dic.emplace('X', 9);
+	dic.emplace('Y', 9);
+	dic.emplace('Z', 9);
+	int n;
+	while (cin >> n && n > 0) {
+		set<string> hs;
+		string s;
+		for (int i = 0; i < n; ++i) {
+			cin >> s;
+			string p = "";
+			for (auto& c : s) {
+				if (isdigit(c)) {
+					p += c;
+				}
+				else if (isupper(c)) {
+					p += dic[c];
 				}
 			}
-		}
-		//开始遍历
-		size_t count = 0;
-		dfs(map, row, col, flag, count);
-		cout << count << endl;
-	}
-	return 0;
-}
-//=========================================================================
-//优化: 标记数组可以不用给出,每走出一步,直接在地图上进行标记
-
-#include <iostream>
-#include <vector>
-using namespace std;
-
-int direct[4][2] = { {-1, 0}, {1, 0}, {0, -1}, {0, 1} };
-void dfs(vector<vector<char>>& map, int row, int col, size_t& count) {
-	if (map[row][col] == '#') {
-		return;
-	}
-	map[row][col] = '#';
-	//否则为黑色瓷砖
-	count++;
-	//然后继续向该位置的其他四个方向进行遍历
-	for (int i = 0; i < 4; ++i) {
-		int x = row + direct[i][0];
-		int y = col + direct[i][1];
-		if ((x >= 0 && x < map.size()) && (y >= 0 && y < map[0].size())) {
-			dfs(map, x, y, count);
-		}
-	}
-}
-int main() {
-	int m, n;
-	while (cin >> m >> n) {
-		if (m * n == 0) {
-			continue;
-		}
-		//接收矩阵,并记录起点的位置
-		vector<vector<char>> map(m, vector<char>(n));
-		int row = 0;
-		int col = 0;
-		for (int i = 0; i < m; ++i) {
-			for (int j = 0; j < n; ++j) {
-				cin >> map[i][j];
-				if (map[i][j] == '@') {
-					row = i;
-					col = j;
-				}
+			if (p.size() != 7) {
+				continue;
 			}
+			p = p.substr(0, 3) + "-" + p.substr(3);
+			hs.emplace(p);
 		}
-		//开始遍历
-		size_t count = 0;
-		dfs(map, row, col, count);
-		cout << count << endl;
+		for (auto& phone : hs) {
+			cout << phone << endl;
+		}
+		cout << endl;
 	}
 	return 0;
 }
