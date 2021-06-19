@@ -1,22 +1,25 @@
 #include <iostream>
 #include <string>
+#include <set>
 using namespace std;
 
-int main() {
-	string s;
-	while (cin >> s) {
-		for (int i = 0; i < s.size(); ++i) {
-			if (s[i] == '_') {
-				continue;
-			}
-			if (i > 0 && s[i - 1] == '_') {
-				cout << (char)toupper(s[i]);
+int main1() {
+	int n;
+	while (cin >> n) {
+		string id, op;
+		set<string> s;
+		size_t maxCon = 0;
+		while (n--) {
+			cin >> id >> op;
+			if (op == "connect") {
+				s.insert(id);
 			}
 			else {
-				cout << s[i];
+				s.erase(id);
 			}
+			maxCon = max(maxCon, s.size());
 		}
-		cout << endl;
+		cout << maxCon << endl;
 	}
 	return 0;
 }
