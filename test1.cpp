@@ -1,31 +1,46 @@
 #include <iostream>
-#include <string>
-#include <map>
+#include <vector>
 using namespace std;
 
-int main() {
-	string str, res;
-	while (cin >> str >> res) {
-		bool flag = true;
-		map<char, int> strdata, resdata;
-		for (auto c : str) {
-			strdata[c]++;
+class Solution {
+public:
+	int MoreThanHalfNum_Solution(vector<int> numbers) {
+		int size = numbers.size();
+		int num = numbers[0];
+		int flag = 1;
+		if (size == 0) {
+			return 0;
 		}
-		for (auto c : res) {
-			resdata[c]++;
-		}
-		for (map<char, int>::iterator it = resdata.begin(); it != resdata.end(); ++it) {
-			if (strdata[it->first] < it->second) {
-				flag = false;
-				break;
+		for (int i = 1; i < size; ++i) {
+			if (num == numbers[i]) {
+				flag++;
+			}
+			else {
+				flag--;
+			}
+			if (flag == 0) {
+				num = numbers[i];
+				flag = 1;
 			}
 		}
-		if (flag == true) {
-			cout << "Yes" << endl;
+		flag = 0;
+		for (int i = 0; i < size; ++i) {
+			if (num == numbers[i]) {
+				flag++;
+			}
 		}
-		else {
-			cout << "No" << endl;
+		if (flag * 2 > size) {
+			return num;
 		}
+		return 0;
 	}
+};
+int main() {
+	Solution a;
+	vector<int> numbers;
+	for (int i = 0; i < numbers.size(); ++i) {
+		cin >> numbers[i];
+	}
+	a.MoreThanHalfNum_Solution(numbers);
 	return 0;
 }
