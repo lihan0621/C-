@@ -1,49 +1,56 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sstream>
 #include <algorithm>
 using namespace std;
 
-bool isBrother(string res, string s) {
-	if (res == s) {
-		return false;
+struct ErrRecord {
+	string file;
+	int lineNo;
+	int count;
+	ErrRecord(string file, int lineNo) {
+		this->file = file;
+		this->lineNo = lineNo;
+		int count;
+		count = 1;
 	}
-	sort(res.begin(), res.end());
-	sort(s.begin(), s.end());
-	if (res == s) {
-		return true;
+	bool operator==(const ErrRecord& a) {
+		return (file == a.file) && (lineNo == a.lineNo);
 	}
-	return false;
+};
+
+string getFileNamae(string path) {
+	int pos = path.rfind('\\');
+	return path.substr(pos + 1);
 }
+string modifyName(string name) {
+	if (name.size() > 16) {
+		name = name.substr(name.size() - 16);
+	}
+	return name;
+}
+
 int main() {
-	int num;
-	while (cin >> num) {
-		string str;
-		string word, s;
-		vector<string> vs;
-		int index;
-		for (int i = 0; i < num; ++i) {
-			cin >> str;
-			vs.push_back(str);
+	string file;
+	int lineNo;
+	vector<ErrRecord> myvec;
+	while (cin >> file >> lineNo) {
+		ErrRecord record(getFileNamae(file), lineNo);
+		auto res = find(myvec.begin(), myvec.end(), record);
+		if (res == myvec.end()) {
+			myvec.push_back(record);
 		}
-		sort(vs.begin(), vs.end());
-		cin >> word;
-		cin >> index;
-		int count = 0;
-		for (int i = 0; i < num; ++i) {
-			if (isBrother(word, vs[i])) {
-				count++;
-			}
-			if (count == index) {
-				s = vs[i];
-			}
+		else {
+			res->count++;
 		}
-		if (!vs.empty()) {
-			cout << count << endl;
+	}
+	int count = 0;
+	for (auto item : myvec) {
+		if (count + 8 >= myvec.size()) {
+			cout << modifyName(item.file) << " " << item.lineNo << " " << item.count << endl;
 		}
-		if (count >= index) {
-			cout << s << endl;
-		}
+		count++;
 	}
 	return 0;
 }
