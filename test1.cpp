@@ -1,25 +1,31 @@
 #include <iostream>
 #include <string>
-#include <set>
+#include <map>
 using namespace std;
 
-int main1() {
-	int n;
-	while (cin >> n) {
-		string id, op;
-		set<string> s;
-		size_t maxCon = 0;
-		while (n--) {
-			cin >> id >> op;
-			if (op == "connect") {
-				s.insert(id);
-			}
-			else {
-				s.erase(id);
-			}
-			maxCon = max(maxCon, s.size());
+int main() {
+	string str, res;
+	while (cin >> str >> res) {
+		bool flag = true;
+		map<char, int> strdata, resdata;
+		for (auto c : str) {
+			strdata[c]++;
 		}
-		cout << maxCon << endl;
+		for (auto c : res) {
+			resdata[c]++;
+		}
+		for (map<char, int>::iterator it = resdata.begin(); it != resdata.end(); ++it) {
+			if (strdata[it->first] < it->second) {
+				flag = false;
+				break;
+			}
+		}
+		if (flag == true) {
+			cout << "Yes" << endl;
+		}
+		else {
+			cout << "No" << endl;
+		}
 	}
 	return 0;
 }
