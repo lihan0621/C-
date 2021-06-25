@@ -1,62 +1,57 @@
-#define  _CRT_SECURE_NO_WARNINGS
+
+//#include <stdio.h>
+//#include<stdlib.h>
+////qosrt函数的使用者得实现一个比较函数
+//int int_cmp(const void * p1, const void * p2)
+//{
+//	return (*(int *)p1 > *(int *)p2);
+//}
+//int main()
+//{
+//	int arr[] = { 1, 3, 5, 7, 9, 2, 4, 6, 8, 0 };
+//	int i = 0;
+//
+//	qsort(arr, sizeof(arr) / sizeof(arr[0]), sizeof (int), int_cmp);
+//	for (i = 0; i< sizeof(arr) / sizeof(arr[0]); i++)
+//	{
+//		printf("%d ", arr[i]);
+//	}
+//	printf("\n");
+//	system("pause");
+//	return 0;
+//}
 #include<stdio.h>
 #include<stdlib.h>
-#include<time.h>
-int menu()
-{
-    printf("*********************\n");
-	printf("******1.游戏开始*****\n");
-	printf("******0.游戏结束*****\n");
-	printf("*********************\n");
-	printf("请输入您的选择:");
-	int choice = 0;
-	scanf("%d", &choice);
-	return choice;
+int int_cmp(const void * p1, const void * p2){
+	return (*(int *)p1 > *(int *)p2);
 }
-game()
-{
-	int toGuess = rand() % 100 + 1;
-	while (1)
-	{printf("请输入要猜的数字:");
-	int input = 0;
-	scanf("%d", &input);
-	if (input < toGuess)
-	{
-		printf("低了!\n");
+void _swap(void *p1, void *p2, int size){
+	int i = 0;
+	for (i = 0; i < size; i++){
+		char tmp = *((char *)p1 + i);
+		*((char *)p1 + i) = *((char *)p2 + i);
+		*((char *)p2 + i) = tmp;
 	}
-	else if (input>toGuess)
-	{
-		printf("高了!\n");
-	}
-	else
-	{
-		printf("猜对了!\n");
-	}
- }
 }
-int main()
-{
-		srand(time(0));
-		while (1)
-		{
-			int choice = menu();
-			if (choice == 1)
-			{
-				game();
+void bubble(void *base, int count, int size, int(*cmp)(void *, void *)){
+	int i = 0;
+	int j = 0;
+	for (i = 0; i < count - 1; i++){
+		for (j = 0; j < count - i - 1; j++){
+			if (cmp((char *)base + j*size, (char *)base + (j + 1)*size)>0){
+				_swap((char *)base + j*size, (char *)base + (j + 1)*size, size);
 			}
-			else if (choice == 0)
-			{
-				printf("程序退出,再见!");
-				break;
-			}
-			else
-			{
-				printf("您的输入有误,请重新输入!\n");
-			}
-	
+		}
 	}
-	
-
+}
+int main(){
+	int arr[] = { 1, 3, 5, 7, 9, 2, 4, 6, 8, 0 };
+	int i = 0;
+	bubble(arr, sizeof(arr) / sizeof(arr[0]), sizeof(int), int_cmp);
+	for (i = 0; i < sizeof(arr) / sizeof(arr[0]); i++){
+		printf("%d ",arr[i]);
+	}
+	printf("\n");
 	system("pause");
 	return 0;
 }
