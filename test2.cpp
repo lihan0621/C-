@@ -1,56 +1,28 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <sstream>
-#include <algorithm>
-using namespace std;
-
-struct ErrRecord {
-	string file;
-	int lineNo;
-	int count;
-	ErrRecord(string file, int lineNo) {
-		this->file = file;
-		this->lineNo = lineNo;
-		int count;
-		count = 1;
-	}
-	bool operator==(const ErrRecord& a) {
-		return (file == a.file) && (lineNo == a.lineNo);
-	}
-};
-
-string getFileNamae(string path) {
-	int pos = path.rfind('\\');
-	return path.substr(pos + 1);
-}
-string modifyName(string name) {
-	if (name.size() > 16) {
-		name = name.substr(name.size() - 16);
-	}
-	return name;
-}
-
-int main() {
-	string file;
-	int lineNo;
-	vector<ErrRecord> myvec;
-	while (cin >> file >> lineNo) {
-		ErrRecord record(getFileNamae(file), lineNo);
-		auto res = find(myvec.begin(), myvec.end(), record);
-		if (res == myvec.end()) {
-			myvec.push_back(record);
-		}
-		else {
-			res->count++;
-		}
-	}
-	int count = 0;
-	for (auto item : myvec) {
-		if (count + 8 >= myvec.size()) {
-			cout << modifyName(item.file) << " " << item.lineNo << " " << item.count << endl;
-		}
-		count++;
-	}
-	return 0;
-}
+//#include<stdio.h>
+//#include<string.h>
+////void func(){}
+////int add(int x, int y) {
+////	return x + y;
+////}
+////int sub(int x, int y) {
+////	return x - y;
+////}
+////int mul(int x, int y) {
+////	return x * y;
+////}
+//
+//int main()
+//{
+//	//void(*p)() = func;
+//	//int(*p2)(int, int) = add;
+//	////初始的空瓶数
+//	//int bottle = 20;
+//	////喝到的总的瓶数
+//	//int total = 20;
+//	//while (bottle > 1) {
+//	//	total += bottle / 2;
+//	//	bottle = bottle / 2 + bottle % 2;
+//	//}
+//	//printf("tolal = %d\n", total);
+//	return 0;
+//}
