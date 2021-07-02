@@ -1,10 +1,9 @@
-#include <stdio.h>
-
-int Max(int a, int b) {
-	return a > b ? a : b;
-}
-int main() {
-	int(*p)(int a, int b) = Max;
+#include<stdio.h>
+int main()
+{
+	const char* p1 = "hello";
+	char p2[] = "hello";
+	char p3[] = "hello";
 
 	return 0;
 }
