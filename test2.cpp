@@ -1,58 +1,81 @@
 //#include<iostream>
-//using namespace std;
-//int fun(int n)
-//{
-//	if (n < 2) {
-//		return n;
-//	}
-//	else {
-//		return 2 * fun(n - 1) + fun(n - 2);
-//	}
-//}
-//int main()
-//{
-//	cout << fun(5) << endl;
-//	return 0;
-//}
-//#include<iostream>
-//using namespace std;
-//struct A
-//{
-//	int a;
-//	short b;
-//	int c;
-//	char d;
-//};
-//struct B
-//{
-//	int a;
-//	short b;
-//	char c;
-//	int d;
-//};
-//int main()
-//{
-//	cout << sizeof(A) << sizeof(B) << endl;
-//	return 0;
-//}
-//#include<iostream>
+//#include<vector>
 //using namespace std;
 //int main()
 //{
-//	int x = 3, y = 3;
-//	switch (x % 2) {
-//	case 1:
-//		switch (y) {
-//		case 0:
-//			cout << "first";
-//		case 1:
-//			cout << "second";
-//			break;
-//		default:
-//			cout << "hello";
+//	vector<int>array;
+//	array.push_back(100);
+//	array.push_back(300);
+//	array.push_back(300);
+//	array.push_back(300);
+//	array.push_back(300);
+//	array.push_back(500);
+//	vector<int>::iterator itor;
+//	for (itor = array.begin(); itor != array.end(); ++itor)
+//	{
+//		if (*itor == 300)
+//		{
+//			itor = array.erase(itor);
 //		}
-//	case 2:
-//		cout << "third";
+//	}
+//	for (itor = array.begin(); itor != array.end(); ++itor)
+//	{
+//		cout << *itor << " ";
 //	}
 //	return 0;
 //}
+//#include<iostream>
+//#include<string>
+//using namespace std;
+//int main()
+//{
+//	string a = "hello world";
+//	string b = a;
+//	if (a.c_str() == b.c_str())
+//	{
+//		cout << "true" << endl;
+//	}
+//	else cout << "false" << endl;
+//	string c = b;
+//	c = "";
+//	if (a.c_str() == b.c_str())
+//	{
+//		cout << "true" << endl;
+//	}
+//	else cout << "false" << endl;
+//	a = "";
+//	if (a.c_str() == b.c_str())
+//	{
+//		cout << "true" << endl;
+//	}
+//	else cout << "false" << endl;
+//	return 0;
+//}
+#include<iostream>
+using namespace std;
+class Sample
+{
+public:
+	Sample(int x)
+	{
+		p = new int(x);
+		//p = &x;
+		//*p = x;
+	}
+	~Sample()
+	{
+		if (p) delete p;
+	}
+	int show()
+	{
+		return *p;
+	}
+private:
+	int* p;
+};
+int main()
+{
+	Sample s(5);
+	cout << s.show() << endl;
+	return 0;
+}
