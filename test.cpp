@@ -1,92 +1,51 @@
-//#include<iostream>
-//#include <stack>
-//using namespace std;
-//int main()
-//{
-//	stack<char>S;
-//	char x, y;
-//	x = 'n';
-//	y = 'g';
-//	S.push(x);
-//	S.push('i');
-//	S.push(y);
-//	S.pop();
-//	S.push('r');
-//	S.push('t');
-//	S.push(x);
-//	S.pop();
-//	S.push('s');
-//	while (!S.empty())
-//	{
-//		x = S.top();
-//		S.pop();
-//		cout << x;
-//	}
-//	cout << y;
-//	return 0;
-//}
-//#include<iostream>
-//#include <stack>
-//#include <queue>
-//using namespace std;
-//int main()
-//{
-//	queue<char>S;
-//	char x, y;
-//	x = 'n';
-//	y = 'g';
-//	S.push(x);
-//	S.push('i');
-//	S.push(y);
-//	S.pop();
-//	S.push('r');
-//	S.push('t');
-//	S.push(x);
-//	S.pop();
-//	S.push('s');
-//	while (!S.empty())
-//	{
-//		x = S.front();
-//		S.pop();
-//		cout << x;
-//	}
-//	cout << y;
-//	return 0;
-//}
 #include<iostream>
-#include <stack>
-#include <queue>
+#include<vector>
 using namespace std;
 int main()
 {
-	priority_queue<int>a;
-	priority_queue<int, vector<int>, greater<int>>c;
-	priority_queue<string>b;
-	for (int i = 0; i < 5; ++i)
+	/*vector<int>array;
+	array.push_back(100);
+	array.push_back(300);
+	array.push_back(300);
+	array.push_back(300);
+	array.push_back(300);
+	array.push_back(500);
+	vector<int>::iterator itor;
+	for (itor = array.begin(); itor != array.end(); ++itor)
 	{
-		a.push(i);
-		c.push(i);
+		if (*itor == 300)
+		{
+			itor = array.erase(itor);
+		}
 	}
-	while (!a.empty())
+	for (itor = array.begin(); itor != array.end(); ++itor)
 	{
-		cout << a.top() << " ";
-		a.pop();
-	}
-	cout << endl;
-	while (!c.empty())
+		cout << *itor << " ";
+	}*/
+	/*int arr[] = { 1,2,3,4,5,6,7,8,9,0 };
+	int n = sizeof(arr) / sizeof(int);
+	vector<int>v(arr, arr + n);
+	cout << v.size() << ":" << v.capacity() << endl;
+	v.reserve(100);
+	v.resize(20);
+	cout << v.size() << ":" << v.capacity() << endl;
+	v.reserve(50);
+	v.resize(5);
+	cout << v.size() << ":" << v.capacity() << endl;*/
+	int arr[] = { 1,2,3,4,5,6,7,8,9 };
+	int n = sizeof(arr) / sizeof(int);
+	vector<int>v(arr, arr + n);
+	vector<int>::iterator it = v.begin();
+	while (it != v.end())
 	{
-		cout << c.top() << " ";
-		c.pop();
+		if (*it != 0)
+		{
+			cout << *it;
+		}
+		else {
+			v.erase(it);
+		}
+		++it;
 	}
-	cout << endl;
-	b.push("abc");
-	b.push("abcd");
-	b.push("cbd");
-	while (!b.empty())
-	{
-		cout << b.top() << " ";
-		b.pop();
-	}
-	cout << endl;
 	return 0;
 }
