@@ -1,146 +1,151 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-typedef int LDataType;
+//假设小堆
+typedef int HDataType;
 
-//双向带头循环列表的节点
-typedef struct ListNode {
-	LDataType _data;
-	//指向下一个节点的起始位置
-	struct ListNode* _next;
-	//指向上一个节点的起始位置
-	struct ListNode* _prev;
-}ListNode;
+typedef struct heap
+{
+	HDataType* _data;
+	int _size;
+	int _capacity;
+}heap;
 
-//双向带头循环链表
-typedef struct List {
-	struct ListNode* _head;
-}List;
-
-//创建节点
-struct ListNode* createListNode(LDataType val) {
-	struct ListNode* node = (struct ListNode*)malloc(sizeof(struct ListNode));
-	node->_data = val;
-	node->_next = NULL;
-	node->_prev = NULL;
-	return node;
+//堆的初始化
+void heapInit(heap* hp)
+{
+	if (hp == NULL)
+		return;
+	hp->_data = NULL;
+	hp->_size = hp->_capacity = 0;
 }
 
-//初始化链表
-void ListInit(List* lst) {
-	if (lst == NULL)
-		return;
-	//空链表
-	lst->_head = createListNode(0);
-	lst->_head->_next = lst->_head->_prev = lst->_head;
-}
-
-//尾插
-void listPushBack(List* lst, LDataType val) {
-	/*	
-	if (lst == NULL)
-		return;
-	struct ListNode* last = lst->_head->_prev;
-	struct ListNode* newNode = createListNode(val);
-	//head ...... last newNode
-	last->_next = newNode;
-	newNode->_prev = last;
-	newNode->_next = lst->_head;
-	lst->_head->_prev = newNode;
-	*/
-
-	listInsert(&lst, lst->_head, val);
-}
-
-//尾删
-void listPopBack(List* lst) {
-	/*
-	if (lst == NULL)
-		return;
-	if (lst->_head->_next == lst->_head)
-		return;
-	struct ListNode* last = lst->_head->_prev;
-	struct ListNode* prev = last->_prev;
-	free(last);
-	lst->_head->_prev = prev;
-	prev->_next = lst->_head;
-	*/
-	listErase(lst, lst->_head->_prev);
-}
-
-//输出
-void printlist(List* lst) {
-	struct ListNode* cur = lst->_head->_next;
-	while (cur != lst->_head) {
-		printf("%d ", cur->_data);
-		cur = cur->_next;
+//检查容量
+void checkCapacity(heap* hp)
+{
+	if (hp->_size == hp->_capacity)
+	{
+		int newC = hp->_capacity == 0 ? 1 : 2 * hp->_capacity;
+		hp->_data = (HDataType*)realloc(hp->_data, sizeof(HDataType) * newC);
+		hp->_capacity = newC;
 	}
-	printf("\n");
 }
 
-//头插
-void listPushFront(List* lst, LDataType val) {
-	/*
-	if (lst == NULL)
+//交换
+void Swap(int* a, int* b)
+{
+	int tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
+
+//堆的插入
+void heapPush(heap* hp, HDataType val)
+{
+	if (hp == NULL)
 		return;
-	struct ListNode* next = lst->_head->_next;
-	struct ListNode* newNode = createListNode(val);
-	lst->_head->_next = newNode;
-	newNode->_prev = lst->_head;
-	newNode->_next = next;
-	next->_prev = newNode;
-	*/
-	listInsert(lst, lst->_head->_next, val);
+	//检查容量
+	checkCapacity(hp);
+	//尾插
+	hp->_data[hp->_size++] = val;
+	//向上调整
+	shiftUp(hp->_data, hp->_size, hp->_size - 1);
 }
 
-//头删
-void listPopFront(List* lst) {
-	/*
-	if (lst == NULL || lst->_head->_next == lst->_head)
-		return;
-	struct ListNode* next = lst->_head->_next;
-	struct ListNode* nextnext = next->_next;
-	lst->_head->_next = nextnext;
-	nextnext->_prev = lst->_head;
-	free(next);
-	*/
-	listErase(lst, lst->_head->_next);
+//堆的删除
+void heapPop(heap* hp)
+{
+	if (hp->_size > 0)
+	{
+		//交换
+		Swap(&hp->_data[0], &hp->_data[hp->_size - 1]);
+		//尾删
+		hp->_size--;
+		//从堆顶位置开始向下调整
+		shiftDown(hp->_data, hp->_size, 0);
+	}
 }
 
-//删除任意位置的节点
-void listErase(List* lst, struct ListNode* node) {
-	if (lst == NULL || node == lst->_head)
-		return;
-	struct ListNode* prev = node->_prev;
-	struct ListNode* next = node->_next;
-	prev->_next = next;
-	next->_prev = prev;
-	free(node);
+//获取堆顶元素
+HDataType heapTop(heap* hp)
+{
+	return hp->_data[0];
 }
 
-//在当前节点之前插入新节点
-void listInsert(List* lst, struct ListNode* node, LDataType val) {
-	if (lst == NULL)
-		return;
-	struct ListNode* prev = node->_prev;
-	struct ListNode* newNode = createListNode(val);
-	// prev  newNode  node
-	prev->_next = newNode;
-	newNode->_prev = prev;
-	newNode->_next = node;
-	node->_prev = newNode;
+//堆的判空
+int heapEmpty(heap* hp)
+{
+	if (hp == NULL || hp->_size == 0)
+		return 1;
+	else
+		return 0;
 }
 
-//销毁
-listDestroy(List* lst) {
-	if (lst) {
-		if (lst->_head) {
-			struct ListNode* cur = lst->_head->_next;
-			while (cur != lst->_head) {
-				struct ListNode* next = cur->_next;
-				free(cur);
-				cur = next;
-			}
-			free(lst->_head);
+//向下调整
+void shiftDown(int* arr, int n, int cur)
+{
+	//找到孩子的位置
+	//左孩子
+	int child = 2 * cur + 1;
+	while (child < n)
+	{
+		//从左右孩子中找一个最小的
+		if (child + 1 < n && arr[child + 1] < arr[child])
+			++child;
+		//和当前数据比较
+		//1.调整: 孩子 < 当前
+		if (arr[child] < arr[cur])
+		{
+			int tmp = arr[child];
+			arr[child] = arr[cur];
+			arr[cur] = tmp;
 		}
+		else
+			//2.不调整: 孩子 >= 当前
+			break;
 	}
+}
+
+//向上调整
+void shiftUp(int* arr, int n, int cur)
+{
+	//和父节点进行比较
+	int parent = (cur - 1) / 2;
+	while (cur > 0)
+	{
+		if (arr[cur] < arr[parent])
+		{
+			int tmp = arr[cur];
+			arr[cur] = arr[parent];
+			arr[parent] = tmp;
+			//更新位置
+			cur = parent;
+			parent = (cur - 1) / 2;
+		}
+		else
+			break;
+	}
+}
+
+//void test()
+//{
+//	int arr[] = { 10, 5, 3, 8, 7, 6 };
+//	shiftDown(arr, sizeof(arr) / sizeof(arr[0]), 0);
+//}
+
+void test()
+{
+	int arr[] = { 10,9,8,7,6,5,4,3,2,1 };
+	int n = sizeof(arr) / sizeof(arr[0]);
+	//建堆: 从最后一个非叶子节点开始: 向下调整
+	for (int i = ((n - 2) / 2); i >= 0; --i)
+	{
+		shiftDown(arr, n, i);
+	}
+}
+
+int main()
+{
+	test();
+	return 0;
 }
