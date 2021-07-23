@@ -1,14 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-typedef char DataType;
-
-typedef struct BNode
-{
-	DataType _data;
-	struct BNode* _left;
-	struct BNode* _right;
-}BNode;
+#include "queue.h"
+#include "btree.h"
 
 //链式结构的创建
 //ABD##E#H##CF##G##
@@ -135,6 +128,32 @@ void bTreeDestroy(BNode** root)
 		free(*root);
 		*root = NULL;
 	}
+}
+
+//层序遍历
+void bTreeLevelOrder(BNode* root)
+{
+	//借助队列保存节点
+	Queue q;
+	queueInit(&q);
+	//根节点存入队列
+	if (root)
+		queuePush(&q, root);
+	//遍历队列中的每一个节点
+	while (!queueEmpty(&q))
+	{
+		//获取队头元素
+		BNode* front = queueFront(&q);
+		//出队
+		queuePop(&q);
+		printf("%d ", front->_data);
+		//保存队头元素的左右孩子节点
+		if (front->_left)
+			queuePush(&q, front->_left);
+		if (front->_right)
+			queuePush(&q, front->_right);
+	}
+	printf("\n");
 }
 
 void test()
