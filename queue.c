@@ -1,20 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-typedef int QDataType;
-
-typedef struct QNode
-{
-	QDataType _data;
-	struct QNode* _next;
-} QNode;
-
-typedef struct Queue
-{
-	QNode* _front;
-	QNode* _rear;
-	int _size;
-} Queue;
+#include "queue.h"
 
 void queueInit(Queue* q)
 {
