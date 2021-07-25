@@ -198,6 +198,90 @@ void quickSort(int* arr, int begin, int end)
 	partion(arr, div + 1, end);
 }
 
+//相邻子序列合并: begin	  end	end + 1   end2
+// begin    mid    end2
+//合并的过程
+void merge(int* arr, int begin, int mid, int end, int* tmp)
+{
+	//递增
+	//子区间: [begin, mid]  [mid, end]
+	int begin1 = begin;
+	int end1 = mid;
+	int begin2 = mid + 1;
+	int end2 = end;
+	//辅助空间的起始位置
+	int idx = begin;
+	//合并有序序列
+	while (begin1 <= end1 && begin2 <= end2)
+	{
+		if (arr[begin1] <= arr[begin2])
+			tmp[idx++] = arr[begin1++];
+		else
+			tmp[idx++] = arr[begin2++];
+	}
+	//判断是否有未合并的元素
+	if (begin1 <= end1)
+		memcpy(tmp + idx, arr + begin1, sizeof(int) * (end1 - begin1 + 1));
+	if (begin2 <= end2)
+		memcpy(tmp + idx, arr + begin2, sizeof(int) * (end2 - begin2 + 1));
+	//将合并后的序列拷贝到原始数组的对应区间
+	memcpy(arr + begin, tmp + begin, sizeof(int) * (end - begin + 1));
+}
+
+//归并排序
+void mergeSort(int* arr, int begin, int end, int* tmp)
+{
+	if (begin >= end)
+		return;
+	int mid = begin + (end - begin) / 2;
+	//首先合并子序列
+	mergeSort(arr, begin, mid, tmp);
+	mergeSort(arr, mid + 1, end, tmp);
+	//合并两个有序序列
+	merge(arr, begin, mid, end, tmp);
+}
+
+//申请辅助空间
+void _mergrSort(int* arr, int n)
+{
+	int* tmp = (int*)malloc(sizeof(int) * n);
+	mergeSort(arr, 0, n - 1, tmp);
+	free(tmp);
+}
+
+//计数排序
+void countSort(int* arr, int n)
+{
+	//找到最大值和最小值
+	int max, min;
+	min = max = arr[0];
+	for (int i = 1; i < n; ++i)
+	{
+		if (arr[i] > max)
+			max = arr[i];
+		if (arr[i] < min)
+			min = arr[i];
+	}
+	//计算范围
+	int range = max - min + 1;
+	//创建一个计数数组, 初始化为0
+	int* countArr = (int*)calloc(range, sizeof(int));
+	//计数
+	for (int i = 0; i < n; ++i)
+	{
+		countArr[arr[i] - min]++;
+	}
+	//遍历计数数组
+	int idx = 0;
+	for (int i = 0; i < range; ++i)
+	{
+		while (countArr--)
+		{
+			arr[idx++] = i + min;
+		}
+	}
+}
+
 void printArr(int* arr, int n)
 {
 	for (int i = 0; i < n; ++i)
