@@ -1,134 +1,178 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <iostream>
-
-//namespace + 命名空间名称 { 变量，函数 }
-namespace N1
-{
-	int a = 0;
-	void fun1()
-	{
-		printf("N1：fun1()\n");//命名空间下的fun1函数
-	}
-	//命名空间可以嵌套
-	namespace N2
-	{
-		int a = 1;
-		void fun1()
-		{
-			//嵌套下的fun1函数
-			printf("N1:N2:fun1()\n");
-		}
-	}
-}
-//命名空间不仅可以嵌套定义，还可以分段定义
-namespace N1
-{
-	//这个命名空间与上面的命名空间属于同一个作用域
-	//int a;//这里的变量就会是一个重定义
-	int b = 20;
-	void fun2()
-	{
-		printf("N1:fun2\n");
-	}
-}
-//全局作用域下的变量与函数，与命名空间中的并不冲突
-int a = 10;
-void fun1()
-{
-	printf("fun1()\n");//全局作用域下的fun1函数
-}
-
-//void test()
-//{
-//	//这里打印的是全局的a
-//	printf("a: %d\n", a);
-//	//命名空间中成员的访问形式
-//	//1. 命名空间 + ::(作用域限定符) + 成员
-//	printf("N1::a = %d\n", N1::a);
-//	//2. using 命名空间::成员
-//	using N1::b;
-//	printf("N1::b = %d\n", b);
-//	//3. 展开命名空间：using namespace 命名空间
-//	using namespace N1;
-//	//如果这样写，N1命名空间下的所有成员都能看到
-//	//printf("N1::a = %d\n", a);
-//	//这里的a是不明确的，当我们展开命名空间之后，
-//	//命名空间中的变量会与全局中的变量产生冲突
-//	fun2();
-//}
+#include <stdlib.h>
 
 using namespace std;
-void fun2(int a)
+
+void fun(int a)
 {
-	cout << a << endl;
+	cout << "fun(int)" << endl;
 }
 
-void fun3(int a = 10)
+void fun(int* a)
 {
-	cout << a << endl;
-}
-
-//全缺省：所有参数都有默认值
-void fun4(int a = 1, int b = 2, int c = 3, int d = 4, int e = 5)
-{
-	cout << a <<" " << b <<" " << c << " " << d << " " << e << endl;
-}
-
-//半缺省：部分参数设置默认值
-//设置默认值必须从右向左连续赋值，中间不能有间隔
-void fun5(int a, int b = 1, int c = 2)
-{
-	cout << a << " " << b << " " << c << endl;
-}
-//但是这些情况是不被允许的
-//void fun6(int a = 1, int b, int c = 2);
-//void fun7(int a, int b = 1, int c, int d = 2);
-//void fun8(int a = 1, int b = 2, int c);
-//函数声明
-void fun6(int a = 10);
-//函数定义
-void fun6(int a = 20)
-{
-	cout << a << endl;
-	//这种情况也是不被允许的，重定义默认参数 
-}
-
-char add(char a, char b)
-{
-	return a + b;
-}
-
-int add(int a, int b)
-{
-	return a + b;
-}
-
-double add(double a, double b)
-{
-	return a + b;
+	cout << "fun(int*)" << endl;
 }
 
 void test()
 {
-	//fun2(); 这个函数如果不给参数是调用不了的
-	fun2(100);
-	fun3();//但这个函数是可以调用的，虽然没有给值，但是它有备用值
-	fun3(50);//当然，如果传入一个值的话，就不会用备用值了
-	fun4();
-	fun4(10, 20, 30);
-	//如果全部给值的话，参数会从左到右依次接收
-	fun4(10, 20, 30, 40, 50);
+	int* p = NULL;//预处理，宏替换：int* p = 0;
+	int* p2 = 0;//这两个没有区别
+	fun(NULL);
+	fun((int*)NULL);
+	fun(nullptr);
 }
 
 //void test()
 //{
+//	//之前我们写的for循环
+//	int arr[] = { 1,2,3,4,5,6 };
+//	for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); ++i)
+//	{
+//		cout << arr[i] << " ";
+//	}
+//	cout << endl;
+//	//范围for： 当前的数据 : 循环的范围
+//	for (int& e : arr)
+//	{
+//		cout << e << " ";
+//		e = 10;
+//	}
+//	cout << endl;
+//	for (int& e : arr)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl;
+//}
+
+//void test()
+//{
+//	//auto: 自动类型推导
+//	auto a = 10;
+//	auto b = 2.0;
+//	auto c = 'a';
+//	auto d = 'a' + b;
+//	cout << typeid(a).name() << endl;
+//	cout << typeid(b).name() << endl;
+//	cout << typeid(c).name() << endl;
+//	cout << typeid(d).name() << endl;
+//}
+
+//inline int add(int a, int b)
+//{
+//	return a + b;
+//}
+//
+//void test()
+//{
+//	//实际编译时：int a = 10 + 20
+//	int a = add(10, 20);
+//}
+
+//void test()
+//{
+//	int a = 10;
+//	int& ra = a;
+//	ra = 100;
+//	int a1 = 10;
+//	int* ra1 = &a1;
+//	*ra1 = 100;
+//}
+
+//struct A
+//{
 //	int a;
-//	//C++头文件中定义的所有成员都属于std命名空间
-//	cin >> a;
-//	cout << a; 
-//	std::cin >> a;
-//	std::cout << a; 
+//	int b;
+//	int c;
+//	int d;
+//	int e;
+//};
+//
+////引用作返回值，返回值的生命周期需要大于函数的生命周期
+//int& add(int& a, int& b)
+//{
+//	int c = a + b;
+//	return c;
+//}
+//
+//void test()
+//{
+//	int a = 10;
+//	int b = 20;
+//	int& ra = add(a, b);
+//	add(a, b);
+//	cout << a << b << endl;
+//	cout << ra << endl;
+//}
+
+//void Swap(int& a, int& b)
+//{
+//	int tmp = a;
+//	a = b;
+//	b = tmp;
+//}
+//
+//void test()
+//{
+//	int a = 10;
+//	int b = 20;
+//	Swap(a, b);
+//}
+
+//void test()
+//{
+//	//常引用：引用指向的实体不能修改
+//	//const 类型&
+//	const int a = 10;
+//	//这种写法是不允许的
+//	//int& ra = a;
+//	//这里必须加上const修饰
+//	const int& ra = a;
+//	const int& ra2 = 100;
+//	double d = 2.5;
+//	int c = 10;
+//	c = d;
+//	const int& ra3 = d;
+//}
+
+//void test()
+//{
+//	//这样写是不对的，引用定义必须初始化
+//	//int& ra;
+//	int a = 10;
+//	int& ra = a;
+//	int& ra1 = a;
+//	int& ra2 = a;
+//	//以下四种方法都可以改变a的内容
+//	a = 5;
+//	ra = 4;
+//	ra1 = 3;
+//	ra2 = 2;
+//
+//	int b = 100;
+//	//这里不是一个重新修改指向的操作，这里是一个赋值的操作
+//	//此时a的内容就变成了100
+//	ra1 = b;
+//}
+
+//void test()
+//{
+//	int a = 10;
+//	//ra是一个引用：是a的别名，指向和a相同的实体
+//	int& ra = a;
+//	A sa;
+//	sa.a = 1;
+//	sa.b = 1;
+//	sa.c = 1;
+//	sa.d = 1;
+//	sa.e = 1;
+//	//rsa和sa指向共同的实体，rsa的内容发生改变，sa的内容也会发生改变
+//	//这里不是一个拷贝，不分配新的空间
+//	A& rsa = sa;
+//	//这才是一个拷贝：分配新的空间
+//	A copy = sa;
+//	copy.a = 100;
+//	rsa.a = 5;
 //}
 
 int main()
