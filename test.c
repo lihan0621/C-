@@ -1,73 +1,62 @@
-#define F(x, y) ((x) + (y))
-#include <stdio.h>
-
-struct Test1
+#define  _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+int menu()
 {
-	short a;
-	char b;
-	long c;
-	long d;
-};
-
-struct Test2
-{
-	long a;
-	short b;
-	char c;
-	long d;
-};
-
-struct Test3
-{
-	short a;
-	long b;
-	char c;
-	long d;
-};
-
-void test()
-{
-	struct Test1 T1;
-	struct Test2 T2;
-	struct Test3 T3;
-	printf("%d  %d  %d", sizeof(T1), sizeof(T2), sizeof(T3));
+    printf("*********************\n");
+	printf("******1.游戏开始*****\n");
+	printf("******0.游戏结束*****\n");
+	printf("*********************\n");
+	printf("请输入您的选择:");
+	int choice = 0;
+	scanf("%d", &choice);
+	return choice;
 }
-
-void test4()
+game()
 {
-	int i = 1, sum = 0;
-	while (i < 10) {
-		sum = sum + 1;
-		i++;
+	int toGuess = rand() % 100 + 1;
+	while (1)
+	{printf("请输入要猜的数字:");
+	int input = 0;
+	scanf("%d", &input);
+	if (input < toGuess)
+	{
+		printf("低了!\n");
 	}
-	printf("%d  %d\n", i, sum);
+	else if (input>toGuess)
+	{
+		printf("高了!\n");
+	}
+	else
+	{
+		printf("猜对了!\n");
+	}
+ }
 }
-
-void test3()
-{
-	int x;
-	x = 5 > 2 + 1 && 2 || 2 * 4 < 4 - !0;
-	printf("%d\n", x);
-}
-
-void test2()
-{
-	int a = 3, b = 4;
-	printf("%d\n", F(a++, b++));
-}
-
-void test1()
-{
-	char a[20];
-	char* ptr = (char*)a;
-	char* ptr2 = (char*)(a + 5);
-	int n = ptr2 - ptr;
-	printf("%d\n", n);
-}
-
 int main()
 {
-	test();
+		srand(time(0));
+		while (1)
+		{
+			int choice = menu();
+			if (choice == 1)
+			{
+				game();
+			}
+			else if (choice == 0)
+			{
+				printf("程序退出,再见!");
+				break;
+			}
+			else
+			{
+				printf("您的输入有误,请重新输入!\n");
+			}
+	
+	}
+	
+
 	system("pause");
 	return 0;
 }
