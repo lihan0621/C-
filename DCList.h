@@ -30,6 +30,8 @@ void DCListEraseByVal(DCList* plist, Elemtype key);
 void DCListSort(DCList* plist);
 int DCListLength(DCList* plist);
 void DCListClear(DCList* plist);
+void DCListReverse(DCList* plist);
+void DCListDestroy(DCList* plist);
 
 
 
@@ -184,6 +186,28 @@ void DCListSort(DCList* plist)
 	}
 }
 
+void DCListReverse(DCList* plist)
+{
+	if (plist->head->next == plist->head)
+		return;
+	DCListNode* p = plist->head->next->next;
+	DCListNode* next = plist->head->next;
+
+	plist->head->prev = next;
+	next->next = plist->head;
+
+	while (p != plist->head)
+	{
+		DCListNode* q = p->next;
+		p->prev = plist->head;
+		p->next = next;
+		p->prev->next = p;
+		p->next->prev = p;
+		next = p;
+		p = q;
+	}
+}
+
 int DCListLength(DCList* plist)
 {
 	DCListNode* p = plist->head->next;
@@ -199,16 +223,21 @@ int DCListLength(DCList* plist)
 void DCListClear(DCList* plist)
 {
 	DCListNode* p = plist->head->next;
-	DCListNode* next = p->next;
 	while (p != plist->head)
 	{
-		p->next = p->prev = NULL;
+		DCListNode* next = p->next;
 		free(p);
 		p = next;
 	}
 	free(plist->head);
-	plist->head->next = plist->head->prev = NULL;
 }
+
+void DCListDestroy(DCList* plist)
+{
+	DCListClear(plist);
+}
+
+
 
 
 
