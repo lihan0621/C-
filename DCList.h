@@ -95,8 +95,6 @@ void DCListPopFront(DCList* plist)
 
 void DCListShow(DCList* plist)
 {
-	if (plist->head->next == plist->head)
-		return;
 	DCListNode* p = plist->head->next;
 	while (p != plist->head)
 	{
@@ -225,16 +223,17 @@ void DCListClear(DCList* plist)
 	DCListNode* p = plist->head->next;
 	while (p != plist->head)
 	{
-		DCListNode* next = p->next;
+		p->prev->next = p->next;
+		p->next->prev = p->prev;
 		free(p);
-		p = next;
+		p = plist->head->next;
 	}
-	free(plist->head);
 }
 
 void DCListDestroy(DCList* plist)
 {
 	DCListClear(plist);
+	free(plist->head);
 }
 
 
