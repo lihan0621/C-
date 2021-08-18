@@ -1,11 +1,24 @@
 #define _CRT_SECURE_NO_WARNINGS
 #pragma warning(disable:6031)
-#include "SeqList.h"
+//#include "SeqList.h"
+//#include "List.h"
+//#include "SCList.h"
+#include "DCList.h"
 
 int main()
 {
-	SeqList myList;
-	SeqListInit(&myList, 8);
+	//SeqList myList;
+	//SeqListInit(&mylist, 8);
+
+	//SCList mylist;
+	//SCListInit(&mylist);
+
+	//List myList;
+	//ListInit(&mylist);
+
+	
+	DCList mylist;
+	DCListInit(&mylist);
 
 	Elemtype item, key;
 	int pos;
@@ -13,14 +26,14 @@ int main()
 	while (select)
 	{
 		printf("********************************************\n");
-		printf("* [1] push_back           [2] push_front   *\n");
-		printf("* [3] show_list           [0] quit_system  *\n");
+		printf("* [0] quit_system         [1] push_back    *\n");
+		printf("* [2] push_front          [3] show_list    *\n");
 		printf("* [4] pop_back            [5] pop_front    *\n");
-		printf("* [6] insert_pos          [7] insert_val   *\n");
-		printf("* [8] erase_pos           [9] erase_val    *\n");
-		printf("* [10] find_pos           [11] find_val    *\n");
+		printf("* [*6] insert_pos         [7] insert_val   *\n");
+		printf("* [*8] erase_pos          [9] erase_val    *\n");
+		printf("* [*10] find_pos          [11] find_val    *\n");
 		printf("* [12] sort               [13] reverse     *\n");
-		printf("* [14] length             [15] capacity    *\n");
+		printf("* [14] length             [*15] capacity   *\n");
 		printf("* [16] clear              [*17] destroy    *\n");
 		printf("********************************************\n");
 		printf("请选择:>");
@@ -31,60 +44,86 @@ int main()
 		switch(select)
 		{
 		case 1:
-			printf("请输入要插入的数据<以-1结束>:>");
-			while(scanf("%d", &item), item!=-1)
+			printf("请输入要插入的数据<以-1结束>:");
+			while(scanf("%d", &item))
 			{
-				SeqListPushBack(&myList, item);
+				if(item == -1)
+					break;
+				DCListPushBack(&mylist, item);
 			}
 			break;
 		case 2:
-			printf("请输入要插入的数据<以-1结束>:>");
-			while(scanf("%d", &item), item!=-1)
+			printf("请输入要插入的数据<以-1结束>:");
+			while(scanf("%d", &item))
 			{
-				SeqListPushFront(&myList, item);
+				if(item == -1)
+					break;
+				DCListPushFront(&mylist, item);
 			}
 			break;
 		case 3:
-			SeqListShow(&myList);
+			DCListShow(&mylist);
 			break;
 		case 4:
-			SeqListPopBack(&myList);
+			DCListPopBack(&mylist);
 			break;
 		case 5:
-			SeqListPopFront(&myList);
+			DCListPopFront(&mylist);
 			break;
 		case 6:
 			printf("请输入要插入的位置:>");
 			scanf("%d", &pos);
 			printf("请输入要插入的值:>");
 			scanf("%d", &item);
-			SeqListInsertByPos(&myList, pos, item);
+			//SeqListInsertByPos(&myList, pos, item);
+			break;
+		case 7:
+			printf("请输入要插入的值:>");
+			scanf("%d", &item);
+			DCListInsertByVal(&mylist, item);
 			break;
 		case 8:
+			printf("请输入要删除的位置:>");
+			scanf("%d", &pos);
+			//SeqListEraseByPos(&myList, pos);
+			break;
+		case 9:
+			printf("请输入要删除的值:>");
+			scanf("%d", &item);
+			//DCListEraseByVal(&mylist, item);
 			break;
 		case 10:
 			printf("请输入要查找的位置:>");
 			scanf("%d", &pos);
-			int val = SeqListFindByPos(&myList, pos);
-			printf("需要查找的 %d 位置的值是： %d \n", pos, val);
+			//int val = SeqListFindByPos(&myList, pos);
+			//printf("需要查找的 %d 位置的值是： %d \n", pos, val);
 			break;
 		case 11:
 			printf("请输入要查找的值:>");
 			scanf("%d", &key);
-			pos = SeqListFindByVal(&myList, key);
+			//pos = ListFind(mylist, key);
 			if (pos == -1)
 				printf("要查找的 %d 的数据不存在\n", key);
 			else
 				printf("要查找的 %d 的位置为： %d\n", key, pos);
 			break;
+		case 12:
+			DCListSort(&mylist);
+			break;
+		case 13:
+			DCListReverse(&mylist);
+			break;
 		case 14:
-			printf("顺序表的长度为:> %d\n", SeqListLength(&myList));
+			printf("顺序表的长度为:> %d\n", DCListLength(&mylist));
 			break;
 		case 15:
-			printf("顺序表的容量为:> %d\n", SeqListCapacity(&myList));
+			//printf("顺序表的容量为:> %d\n", SeqListCapacity(&myList));
 			break;
 		case 16:
-			SeqListClear(&myList);
+			DCListClear(&mylist);
+			break;
+		case 17:
+			DCListDestroy(&mylist);
 			break;
 		default:
 			break;
