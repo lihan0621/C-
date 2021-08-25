@@ -67,6 +67,83 @@ public:
 		return true;
 	}
 
+	bool erase(const T& val)
+	{
+		//查找
+		Node* cur = _root;
+		Node* parent = nullptr;
+		while (cur)
+		{
+			if (cur->_data == val)
+				break;
+			parent = cur;
+			if (cur->_data > val)
+				cur = cur->_left;
+			else
+				cur = cur->_right;
+		}
+		//判断是否找到了需要删除的节点
+		if (cur == nullptr)
+			return false;
+
+		//删除
+		//1.删除的为叶子节点
+		if (cur->_left == nullptr && cur->_right == nullptr)
+		{
+			//判断是否为根节点
+			if (cur == _root)
+			{
+				_root = nullptr;
+			}
+			else
+			{
+				//判断需要删除的节点在父节点的哪一边
+				if (parent->_left == cur)
+					parent->_left = nullptr;
+				else
+					parent->_right = nullptr;
+			}
+			//删除节点
+			delete cur;
+		}
+		else if (cur->_left == nullptr)  //非叶子节点
+		{
+			//判断删除的是否为根节点
+			if (cur == _root)
+			{
+				//更新根节点
+				_root = cur->_right;
+			}
+			else
+			{
+				if (parent->_left == cur)
+					parent->_left = cur->_right;
+				else
+					parent->_right = cur->_right;
+			}
+
+			//删除节点
+			delete cur;
+		}
+		else if (cur->_right == nullptr)
+		{
+			if (cur == _root)
+			{
+				_root = cur->_left;
+			}
+			else
+			{
+				if (parent->_right == cur)
+					parent->_right = cur->_left;
+				else
+					parent->_left = cur->_left;
+			}
+			delete cur;
+		}
+		return true;
+
+	}
+
 	void inorder()
 	{
 		_inorder(_root);
