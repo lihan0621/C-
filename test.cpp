@@ -140,6 +140,27 @@ public:
 			}
 			delete cur;
 		}
+		else
+		{
+			//左右子树都存在
+			//1.假设找左子树的最右节点
+			Node* leftRightMost = cur->_left;
+			parent = cur;
+			while (leftRightMost->_right)
+			{
+				parent = leftRightMost;
+				leftRightMost = leftRightMost->_right;
+			}
+			//2.交换
+			swap(cur->_data, leftRightMost->_data);
+
+			//3.删除最右节点
+			if (parent->_left == leftRightMost)
+				parent->_left = leftRightMost->_left;
+			else
+				parent->_right = leftRightMost->_left;
+			delete leftRightMost;
+		}
 		return true;
 
 	}
