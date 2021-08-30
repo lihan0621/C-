@@ -1,245 +1,121 @@
 #include <iostream>
+#include <set>
+#include <map>
 using namespace std;
 
-template <class T>
-struct BNode
+template <class T1, class T2>
+void printMap(const map<T1, T2>& m)
 {
-	T _data;
-	typedef BNode<T> Node;
-	Node* _left;
-	Node* _right;
-	BNode(const T& data)
-		:_data(data)
-		, _left(nullptr)
-		, _right(nullptr)
-	{}
-};
+	//map中的数据是pair
+	//迭代器访问的顺序：按照key的中序遍历的顺序
+	map<int, int>::const_iterator it = m.begin();
+	while (it != m.end())
+	{
+		//不能直接输出pair对象
+		//cout << *it << endl;
+		cout << it->first << "--->" << it->second << endl;
+		++it;
+	}
+}
 
-template <class T>
-class BTree
+template <class T1, class T2>
+void printMap2(const map<T1, T2>& m)
 {
-public:
-	typedef BNode<T> Node;
-
-	Node* find(const T& val)
+	//map中的数据是pair
+	//迭代器访问的顺序：按照key的中序遍历的顺序
+	map<int, int>::const_reverse_iterator it = m.rbegin();
+	while (it != m.rend())
 	{
-		Node* cur = _root;
-		while (cur)
-		{
-			if (cur->_data == val)
-				return cur;
-			else if (cur->_data > val)
-				cur = cur->_left;
-			else
-				cur = cur->_right;
-		}
+		//不能直接输出pair对象
+		//cout << *it << endl;
+		cout << it->first << "--->" << it->second << endl;
+		++it;
 	}
-
-	//插入节点
-	//不插入重复的值
-	bool insert(const T& val)
-	{
-		//向空树中插入
-		if (_root == nullptr)
-		{
-			_root = new Node(val);
-			return true;
-		}
-		//搜索，找到合适的插入位置
-		Node* cur = _root;
-		Node* parent = nullptr;
-		while (cur)
-		{
-			parent = cur;
-			if (cur->_data == val)
-				return false;
-			else if (cur->_data > val)
-				cur = cur->_left;
-			else
-				cur = cur->_right;
-		}
-		//插入
-		cur = new Node(val);
-		if (parent->_data > val)
-			parent->_left = cur;
-		else
-			parent->_right = cur;
-		return true;
-	}
-
-	bool erase(const T& val)
-	{
-		//查找
-		Node* cur = _root;
-		Node* parent = nullptr;
-		while (cur)
-		{
-			if (cur->_data == val)
-				break;
-			parent = cur;
-			if (cur->_data > val)
-				cur = cur->_left;
-			else
-				cur = cur->_right;
-		}
-		//判断是否找到了需要删除的节点
-		if (cur == nullptr)
-			return false;
-
-		//删除
-		//1.删除的为叶子节点
-		if (cur->_left == nullptr && cur->_right == nullptr)
-		{
-			//判断是否为根节点
-			if (cur == _root)
-			{
-				_root = nullptr;
-			}
-			else
-			{
-				//判断需要删除的节点在父节点的哪一边
-				if (parent->_left == cur)
-					parent->_left = nullptr;
-				else
-					parent->_right = nullptr;
-			}
-			//删除节点
-			delete cur;
-		}
-		else if (cur->_left == nullptr)  //非叶子节点
-		{
-			//判断删除的是否为根节点
-			if (cur == _root)
-			{
-				//更新根节点
-				_root = cur->_right;
-			}
-			else
-			{
-				if (parent->_left == cur)
-					parent->_left = cur->_right;
-				else
-					parent->_right = cur->_right;
-			}
-
-			//删除节点
-			delete cur;
-		}
-		else if (cur->_right == nullptr)
-		{
-			if (cur == _root)
-			{
-				_root = cur->_left;
-			}
-			else
-			{
-				if (parent->_right == cur)
-					parent->_right = cur->_left;
-				else
-					parent->_left = cur->_left;
-			}
-			delete cur;
-		}
-		else
-		{
-			//左右子树都存在
-			//1.假设找左子树的最右节点
-			Node* leftRightMost = cur->_left;
-			parent = cur;
-			while (leftRightMost->_right)
-			{
-				parent = leftRightMost;
-				leftRightMost = leftRightMost->_right;
-			}
-			//2.交换
-			swap(cur->_data, leftRightMost->_data);
-
-			//3.删除最右节点
-			if (parent->_left == leftRightMost)
-				parent->_left = leftRightMost->_left;
-			else
-				parent->_right = leftRightMost->_left;
-			delete leftRightMost;
-		}
-		return true;
-
-	}
-
-	void inorder()
-	{
-		_inorder(_root);
-		cout << endl;
-	}
-
-	//搜索树的中序遍历有序
-	void _inorder(Node* root)
-	{
-		if (root)
-		{
-			_inorder(root->_left);
-			cout << root->_data << " ";
-			_inorder(root->_right);
-		}
-	}
-
-	void destroy(Node* root)
-	{
-		if (root)
-		{
-			cout << "destroy: " << root->_data << endl;
-			destroy(root->_left);
-			destroy(root->_right);
-			delete root;
-		}
-	}
-
-	//拷贝二叉搜索树的数据和结构
-	Node* copy(Node* root)
-	{
-		if (root == nullptr)
-			return nullptr;
-		Node* newnode = new Node(root->_data);
-		newnode->_left = copy(root->_left);
-		newnode->_right = copy(root->_right);
-		return newnode;
-	}
-
-	BTree(const BTree<T>& btree)
-		:_root(copy(btree._root))
-	{}
-
-	BTree()
-		:_root(nullptr)
-	{}
-
-	~BTree()
-	{
-		if (_root)
-		{
-			destroy(_root);
-			_root = nullptr;
-		}
-	}
-
-private:
-	Node* _root;
-};
+}
 
 void test()
 {
-	BTree<int> b;
-	srand((unsigned int)time(nullptr));
-	int num;
-	cin >> num;
-	for (int i = 0; i < num; ++i)
-	{
-		b.insert(rand());
-	}
-	b.inorder();
+	map<int, int> m;
+	pair<int, int> arr[] = { pair<int, int>(5, 5), pair<int, int>(1,2),
+		pair<int, int>(3,3),pair<int, int>(0,0),pair<int,int>(1,3) };
+	//map中key不能重复，val可以重复
+	map<int, int> m2(arr, arr + sizeof(arr) / sizeof(arr[0]));
+	printMap(m2);
+	cout << "reverse_it" << endl;
+	printMap2(m2);
 
-	BTree<int> copy(b);
-	copy.inorder();
+	map<int, int, greater<int>> m3(arr, arr + sizeof(arr) / sizeof(arr[0]));
+	for (auto& p : m3)
+	{
+		cout << p.first << "--->" << p.second << endl;
+	}
 }
+
+//template <class T>
+//void printSet(const set<T>& s)
+//{
+//	for (auto& e : s)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl;
+//}
+//
+//void test()
+//{
+//	set<int> s;
+//	int arr[] = { 1,2,3,4,4 };
+//	//set中不存放重复的数据，天然去重，所以s2中只会存在4个元素
+//	set<int> s2(arr, arr + sizeof(arr) / sizeof(arr[0]));
+//
+//	//set迭代器遍历，数据天然有序：本质迭代器进行中序遍历
+//	//set<int>::iterator it = s2.begin();
+//	//while (it != s2.end())
+//	//{
+//	//	cout << *it << " ";
+//	//	//set迭代器不支持修改
+//	//	//*it = 10;
+//	//	++it;
+//	//}
+//	//cout << endl;
+//
+//	//cout << "reverse iterator:" << endl;
+//	//set<int>::reverse_iterator rit = s2.rbegin();
+//	//while (rit != s2.rend())
+//	//{
+//	//	cout << *rit << " ";
+//	//	++rit;
+//	//}
+//	//cout << endl;
+//
+//	//insert: 插入失败：已有数据迭代器，false
+//	pair<set<int>::iterator, bool> ret = s2.insert(2);
+//	cout << ret.second << " " << *ret.first << endl;
+//	//insert: 插入成功：新数据迭代器，true
+//	ret = s2.insert(20);
+//	cout << ret.second << " " << *ret.first << endl;
+//	printSet(s2);
+//	//iterator insert(iterator position, const value_type & val);
+//	//insert(iterator, val): iterator只是一个位置建议，最终数据的位置不一定在指定迭代器之前
+//	s2.insert(ret.first, 0);
+//	printSet(s2);
+//
+//	int arr2[] = { 12,9,6,18,39,12,9,6 };
+//	s2.insert(arr2, arr2 + sizeof(arr2) / sizeof(arr2[0]));
+//	printSet(s2);
+//
+//	int num = s2.erase(39);
+//	printSet(s2);
+//	cout << num << endl;
+//	num = s2.erase(399);
+//	cout << num << endl;
+//	s2.erase(s2.begin());
+//	//erase: 不能传非法位置：比如end;
+//	//s2.erase(s2.end());
+//	printSet(s2);
+//	s2.erase(++s2.begin(), --s2.end());
+//	printSet(s2);
+//}
 
 int main()
 {
