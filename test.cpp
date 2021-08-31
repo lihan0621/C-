@@ -36,20 +36,60 @@ void printMap2(const map<T1, T2>& m)
 void test()
 {
 	map<int, int> m;
-	pair<int, int> arr[] = { pair<int, int>(5, 5), pair<int, int>(1,2),
-		pair<int, int>(3,3),pair<int, int>(0,0),pair<int,int>(1,3) };
-	//map中key不能重复，val可以重复
-	map<int, int> m2(arr, arr + sizeof(arr) / sizeof(arr[0]));
-	printMap(m2);
-	cout << "reverse_it" << endl;
-	printMap2(m2);
+	//错误的插入方式
+	//auto ret = m.insert(1, 1);
+	//插入的类型为pair对象
+	//两种常见的插入方式
+	//1. 调用pair构造函数创建对象
+	auto ret = m.insert(pair<int, int>(1, 1));
+	cout << ret.first->first << "--->" << ret.first->second << "insert: " << ret.second << endl;
+	//2. 调用make_pair函数创建对象
+	ret = m.insert(make_pair(1, 2));
+	cout << ret.first->first << "--->" << ret.first->second << "insert: " << ret.second << endl;
 
-	map<int, int, greater<int>> m3(arr, arr + sizeof(arr) / sizeof(arr[0]));
-	for (auto& p : m3)
-	{
-		cout << p.first << "--->" << p.second << endl;
-	}
+	ret = m.insert(make_pair(2, 3));
+	cout << ret.first->first << "--->" << ret.first->second << "insert: " << ret.second << endl;
+
 }
+
+//void test()
+//{
+//
+//	pair<int, int> arr[] = { pair<int, int>(5, 5), pair<int, int>(1,2),
+//		pair<int, int>(3,3),pair<int, int>(0,0),pair<int,int>(1,3) };
+//	//map中key不能重复，value可以重复
+//	map<int, int> m2(arr, arr + sizeof(arr) / sizeof(arr[0]));
+//	printMap(m2);
+//	//operator[]: 读
+//	cout << m2[3] << endl;
+//	cout << m2[1] << endl;
+//	//operator[]: 写
+//	m2[1] = 100;
+//	printMap(m2);
+//	//operator[]: 插入
+//	m2[100] = 100;
+//	cout << m2[100] << endl;
+//}
+
+//void test()
+//{
+//	map<int, int> m;
+//	pair<int, int> arr[] = { pair<int, int>(5, 5), pair<int, int>(1,2),
+//		pair<int, int>(3,3),pair<int, int>(0,0),pair<int,int>(1,3) };
+//	//map中key不能重复，val可以重复
+//	map<int, int> m2(arr, arr + sizeof(arr) / sizeof(arr[0]));
+//	printMap(m2);
+//	cout << "reverse_it" << endl;
+//	printMap2(m2);
+//
+//	map<int, int, greater<int>> m3(arr, arr + sizeof(arr) / sizeof(arr[0]));
+//	for (auto& p : m3)
+//	{
+//		cout << p.first << "--->" << p.second << endl;
+//	}
+//
+//	//map的迭代器：可以修改value，不能修改key
+//}
 
 //template <class T>
 //void printSet(const set<T>& s)
