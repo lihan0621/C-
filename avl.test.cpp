@@ -1,4 +1,5 @@
 #include <iostream>
+#include <time.h>
 using namespace std;
 
 template <class T>
@@ -161,22 +162,52 @@ public:
 		parent->_bf = subR->_bf = 0;
 	}
 
+	void inorder()
+	{
+		_inorder(_root);
+		cout << endl;
+	}
+
+	void _inorder(Node* root)
+	{
+		if (root)
+		{
+			_inorder(root->_left);
+			cout << root->_val << " ";
+			_inorder(root->_right);
+		}
+	}
+
 private:
 	Node* _root = nullptr;
 };
 
 void test()
 {
+	srand((unsigned int)time(nullptr));
+	cout << "num: " << endl;
+	int num;
+	cin >> num;
 	AVLTree<int> avl;
-	avl.insert(5);
-	avl.insert(3);
-	avl.insert(1); //ÓÒĞı
-
-	avl.insert(0);
-	avl.insert(2);
-
-	avl.insert(-1); //ÓÒĞı
+	for (int i = 0; i < num; ++i)
+	{
+		avl.insert(rand());
+	}
+	avl.inorder();
 }
+
+//void test()
+//{
+//	AVLTree<int> avl;
+//	avl.insert(5);
+//	avl.insert(3);
+//	avl.insert(1); //ÓÒĞı
+//
+//	avl.insert(0);
+//	avl.insert(2);
+//
+//	avl.insert(-1); //ÓÒĞı
+//}
 
 int main()
 {
