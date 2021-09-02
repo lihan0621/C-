@@ -178,6 +178,30 @@ public:
 		}
 	}
 
+	int	Height(Node* root)
+	{
+		if (root == nullptr)
+			return 0;
+		int left = Height(root->_left);
+		int right = Height(root->_right);
+		return left > right ? left + 1 : right + 1;
+	}
+
+	bool _isBalance(Node* root)
+	{
+		if (root == nullptr)
+			return true;
+		//查看平衡因子是否和左右子树的高度差一致
+		int left = Height(root->_left);
+		int right = Height(root->_right);
+		if (right - left != root->_bf)
+		{
+			cout << "Node: " << root->_val << " bf: " << root->_bf << " height gap: " << right - left << endl;
+			return false;
+		}
+		return abs(root->_bf) < 2 && _isBalance(root->_left) && _isBalance(root->_right);
+	}
+
 private:
 	Node* _root = nullptr;
 };
