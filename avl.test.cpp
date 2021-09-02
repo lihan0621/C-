@@ -79,12 +79,31 @@ public:
 					//ÓÒÐý
 					RotateR(parent);
 				}
+				else if (parent->_bf == 2 && cur->_bf == 1)
+				{
+					//ÓÒ±ßµÄÓÒ±ß¸ß
+					//×óÐý
+					RotateL(parent);
+				}
+				else if (parent->_bf == -2 && cur->_bf == 1)
+				{
+					//×ó±ßµÄÓÒ±ß¸ß
+					RotateL(cur);
+					RotateR(parent);
+				}
+				else if (parent->_bf == 2 && cur->_bf == -1)
+				{
+					//ÓÒ±ßµÄ×ó±ß¸ß
+					RotateR(cur);
+					RotateL(parent);
+				}
 				break;
 			}
 		}
 		return true;
 	}
 
+	//ÓÒÐý
 	void RotateR(Node* parent)
 	{
 		Node* subL = parent->_left;
@@ -111,6 +130,35 @@ public:
 		}
 		parent->_parent = subL;
 		subL->_bf = parent->_bf = 0;
+	}
+
+	//×óÐý
+	void RotateL(Node* parent)
+	{
+		Node* subR = parent->_right;
+		Node* subRL = subR->_left;
+
+		subR->_left = parent;
+		parent->_right = subRL;
+		if (subRL)
+			subRL->_parent = parent;
+		if (parent == _root)
+		{
+			_root = subR;
+			subR->_parent = nullptr;
+		}
+		else
+		{
+			Node* pparent = parent->_parent;
+			if (pparent->_left == parent)
+				pparent->_left = subR;
+			else
+				pparent->_right = subR;
+			subR->_parent = pparent;
+		}
+
+		parent->_parent = subR;
+		parent->_bf = subR->_bf = 0;
 	}
 
 private:
