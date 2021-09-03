@@ -94,9 +94,25 @@ public:
 				}
 				else if (parent->_bf == 2 && cur->_bf == -1)
 				{
+					//保存subRL的bf
+					Node* subRL = cur->_left;
+					int bf = subRL->_bf;
+
 					//右边的左边高
 					RotateR(cur);
 					RotateL(parent);
+
+					//修正平衡因子
+					if (bf == 1)
+					{
+						cur->_bf = 0;
+						parent->_bf = -1;
+					}
+					else if (bf == -1)
+					{
+						cur->_bf = 1;
+						parent->_bf = 0;
+					}
 				}
 				break;
 			}
@@ -201,6 +217,12 @@ public:
 		}
 		return abs(root->_bf) < 2 && _isBalance(root->_left) && _isBalance(root->_right);
 	}
+
+	void isBalance()
+	{
+		_isBalance(root);
+	}
+		
 
 private:
 	Node* _root = nullptr;
