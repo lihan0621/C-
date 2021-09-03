@@ -88,9 +88,22 @@ public:
 				}
 				else if (parent->_bf == -2 && cur->_bf == 1)
 				{
+					Node* subLR = cur->_right;
+					int bf = subLR->_bf;
+
 					//×ó±ßµÄÓÒ±ß¸ß
 					RotateL(cur);
 					RotateR(parent);
+					if (bf == 1)
+					{
+						parent->_bf = 0;
+						cur->_bf = -1;
+					}
+					else if (bf == -1)
+					{
+						parent->_bf = 1;
+						cur->_bf = 0;
+					}
 				}
 				else if (parent->_bf == 2 && cur->_bf == -1)
 				{
