@@ -1,160 +1,278 @@
 #include <iostream>
-#include <set>
-#include <map>
 using namespace std;
 
-template <class T1, class T2>
-void printMap(const map<T1, T2>& m)
+enum COLOR
 {
-	//map中的数据是pair
-	//迭代器访问的顺序：按照key的中序遍历的顺序
-	map<int, int>::const_iterator it = m.begin();
-	while (it != m.end())
-	{
-		//不能直接输出pair对象
-		//cout << *it << endl;
-		cout << it->first << "--->" << it->second << endl;
-		++it;
-	}
-}
+	BLACK,
+	RED
+};
 
-template <class T1, class T2>
-void printMap2(const map<T1, T2>& m)
+template <class K, class V>
+struct RBNode
 {
-	//map中的数据是pair
-	//迭代器访问的顺序：按照key的中序遍历的顺序
-	map<int, int>::const_reverse_iterator it = m.rbegin();
-	while (it != m.rend())
+	//typedef bool color;
+
+	RBNode<K, V>* _parent;
+	RBNode<K, V>* _left;
+	RBNode<K, V>* _right;
+
+	pair<K, V> _kv;
+	//颜色
+	COLOR _color;
+
+	RBNode(const pair<K, V>& kv = pair<K, V>())
+		:_parent(nullptr)
+		, _left(nullptr)
+		, _right(nullptr)
+		, _kv(kv)
+		, _color(RED)
+	{}
+};
+
+template <class K, class V>
+class RBTree
+{
+public:
+	typedef RBNode<K, V> Node;
+
+	RBTree()
+		:_header(new Node)
 	{
-		//不能直接输出pair对象
-		//cout << *it << endl;
-		cout << it->first << "--->" << it->second << endl;
-		++it;
+		//创建空树
+		_header->_left = _header->_right = _header;
 	}
-}
+
+	bool insert(const pair<K, V>& kv)
+	{
+		//1. 搜索树的插入
+		//空树: _header->parent: nullptr
+		if (_header->_parent == nullptr)
+		{
+			//创建根节点
+			Node* root = new Node(kv);
+
+			_header->_parent = root;
+			root->_parent = _header;
+			_header->_left = _header->_right = root;
+
+			//根节点是黑色
+			root->_color = BLACK;
+			return true;
+		}
+
+		//从根节点开始搜索
+		Node* cur = _header->_parent;
+		Node* parent = nullptr;
+		while (cur)
+		{
+			parent = cur;
+			//和key值进行比较
+			if (cur->_kv.first == kv.first)
+			{
+				//key值不允许重复
+				return false;
+			}
+			else if (cur->_kv.first > kv.first)
+			{
+				cur = cur->_left;
+			}
+			else
+			{
+				cur = cur->_right;
+			}
+		}
+
+		//创建待插入的节点
+		cur = new Node(kv);
+		if (parent->_kv.first > cur->_kv.first)
+			parent->_left = cur;
+		else
+			parent->_right = cur;
+		cur->_parent = parent;
+
+		//2. 修改颜色或调整结构
+		//判断是否有红色连续的节点
+		while (cur != _header->_parent && cur->_parent->_color == RED)
+		{
+			parent = cur->_parent;
+			Node* gfather = parent->_parent;
+
+			if (gfather->_left == parent)
+			{
+				Node* uncle = gfather->_right;
+				//1.uncle是存在的，并且是红色的
+				if (uncle && uncle->_color == RED)
+				{
+					parent->_color = uncle->_color = BLACK;
+					gfather->_color = RED;
+					//继续更新
+					cur = gfather;
+				}
+				else
+				{
+					cout << "Rotate" << endl;
+					//判断是否为双旋的场景
+					if (cur == parent->_right)
+					{
+						//左旋
+						RotateL(parent);
+						//交换cur, parent指向，退化成右旋的场景
+						swap(cur, parent);
+					}
+					//右旋
+					RotateR(gfather);
+					parent->_color = BLACK;
+					gfather->_color = RED;
+					break;
+				}
+			}
+			else
+			{
+				Node* uncle = gfather->_left;
+				if (uncle && uncle->_color == RED)
+				{
+					parent->_color = uncle->_color = BLACK;
+					gfather->_color = RED;
+					cur = gfather;
+				}
+				else
+				{
+					cout << "Rotate" << endl;
+					if (cur == parent->_left)
+					{
+						RotateR(parent);
+						swap(cur, parent);
+					}
+					RotateL(gfather);
+					parent->_color = BLACK;
+					gfather->_color = RED;
+					break;
+				}
+			}
+		}
+		//根节点的颜色改成黑色
+		_header->_parent->_color = BLACK;
+		//更新header的左右指向
+		_header->_left = leftMost();
+		_header->_right = rightMost();
+		return true;
+	}
+
+	void RotateL(Node* parent)
+	{
+		Node* subR = parent->_right;
+		Node* subRL = subR->_left;
+
+		subR->_left = parent;
+		parent->_right = subRL;
+		if (subRL)
+			subRL->_parent = parent;
+		//判断根
+		if (parent == _header->_parent)
+		{
+			_header->_parent = subR;
+			subR->_parent = _header;
+		}
+		else
+		{
+			Node* pparent = parent->_parent;
+			if (pparent->_left == parent)
+				pparent->_left = subR;
+			else
+				pparent->_right = subR;
+			subR->_parent = pparent;
+		}
+		parent->_parent = subR;
+	}
+
+	void RotateR(Node* parent)
+	{
+		Node* subL = parent->_left;
+		Node* subLR = subL->_right;
+
+		subL->_right = parent;
+		parent->_left = subLR;
+		if (subLR)
+			subLR->_parent = parent;
+
+		//判断根
+		if (parent == _header->_parent)
+		{
+			_header->_parent = subL;
+			subL->_parent = _header;
+		}
+		else
+		{
+			Node* pparent = parent->_parent;
+			if (pparent->_left == parent)
+				pparent->_left = subL;
+			else
+				pparent->_right = subL;
+			subL->_parent = parent;
+		}
+		parent->_parent = subL;
+	}
+
+	Node* leftMost()
+	{
+		Node* cur = _header->_parent;
+		while (cur && cur->_left)
+		{
+			cur = cur->_left;
+		}
+		return cur;
+	}
+
+	Node* rightMost()
+	{
+		Node* cur = _header->_parent;
+		while (cur && cur->_right)
+		{
+			cur = cur->_right;
+		}
+		return cur;
+	}
+
+	void inorder()
+	{
+		_inorder(_header->_parent);
+		cout << endl;
+	}
+
+	void _inorder(Node* root)
+	{
+		if (root)
+		{
+			_inorder(root->_left);
+			cout << root->_kv.first << " ";
+			_inorder(root->_right);
+		}
+	}
+
+	//成员： header
+private:
+	Node* _header;
+};
 
 void test()
 {
-	map<int, int> m;
-	//错误的插入方式
-	//auto ret = m.insert(1, 1);
-	//插入的类型为pair对象
-	//两种常见的插入方式
-	//1. 调用pair构造函数创建对象
-	auto ret = m.insert(pair<int, int>(1, 1));
-	cout << ret.first->first << "--->" << ret.first->second << "insert: " << ret.second << endl;
-	//2. 调用make_pair函数创建对象
-	ret = m.insert(make_pair(1, 2));
-	cout << ret.first->first << "--->" << ret.first->second << "insert: " << ret.second << endl;
-
-	ret = m.insert(make_pair(2, 3));
-	cout << ret.first->first << "--->" << ret.first->second << "insert: " << ret.second << endl;
-
+	RBTree<int, int> rbt;
+	int n;
+	cin >> n;
+	for (int i = n; i > 0; --i)
+	{
+		rbt.insert(make_pair(i, i));
+	}
+	rbt.inorder();
 }
 
 //void test()
 //{
-//
-//	pair<int, int> arr[] = { pair<int, int>(5, 5), pair<int, int>(1,2),
-//		pair<int, int>(3,3),pair<int, int>(0,0),pair<int,int>(1,3) };
-//	//map中key不能重复，value可以重复
-//	map<int, int> m2(arr, arr + sizeof(arr) / sizeof(arr[0]));
-//	printMap(m2);
-//	//operator[]: 读
-//	cout << m2[3] << endl;
-//	cout << m2[1] << endl;
-//	//operator[]: 写
-//	m2[1] = 100;
-//	printMap(m2);
-//	//operator[]: 插入
-//	m2[100] = 100;
-//	cout << m2[100] << endl;
-//}
-
-//void test()
-//{
-//	map<int, int> m;
-//	pair<int, int> arr[] = { pair<int, int>(5, 5), pair<int, int>(1,2),
-//		pair<int, int>(3,3),pair<int, int>(0,0),pair<int,int>(1,3) };
-//	//map中key不能重复，val可以重复
-//	map<int, int> m2(arr, arr + sizeof(arr) / sizeof(arr[0]));
-//	printMap(m2);
-//	cout << "reverse_it" << endl;
-//	printMap2(m2);
-//
-//	map<int, int, greater<int>> m3(arr, arr + sizeof(arr) / sizeof(arr[0]));
-//	for (auto& p : m3)
-//	{
-//		cout << p.first << "--->" << p.second << endl;
-//	}
-//
-//	//map的迭代器：可以修改value，不能修改key
-//}
-
-//template <class T>
-//void printSet(const set<T>& s)
-//{
-//	for (auto& e : s)
-//	{
-//		cout << e << " ";
-//	}
-//	cout << endl;
-//}
-//
-//void test()
-//{
-//	set<int> s;
-//	int arr[] = { 1,2,3,4,4 };
-//	//set中不存放重复的数据，天然去重，所以s2中只会存在4个元素
-//	set<int> s2(arr, arr + sizeof(arr) / sizeof(arr[0]));
-//
-//	//set迭代器遍历，数据天然有序：本质迭代器进行中序遍历
-//	//set<int>::iterator it = s2.begin();
-//	//while (it != s2.end())
-//	//{
-//	//	cout << *it << " ";
-//	//	//set迭代器不支持修改
-//	//	//*it = 10;
-//	//	++it;
-//	//}
-//	//cout << endl;
-//
-//	//cout << "reverse iterator:" << endl;
-//	//set<int>::reverse_iterator rit = s2.rbegin();
-//	//while (rit != s2.rend())
-//	//{
-//	//	cout << *rit << " ";
-//	//	++rit;
-//	//}
-//	//cout << endl;
-//
-//	//insert: 插入失败：已有数据迭代器，false
-//	pair<set<int>::iterator, bool> ret = s2.insert(2);
-//	cout << ret.second << " " << *ret.first << endl;
-//	//insert: 插入成功：新数据迭代器，true
-//	ret = s2.insert(20);
-//	cout << ret.second << " " << *ret.first << endl;
-//	printSet(s2);
-//	//iterator insert(iterator position, const value_type & val);
-//	//insert(iterator, val): iterator只是一个位置建议，最终数据的位置不一定在指定迭代器之前
-//	s2.insert(ret.first, 0);
-//	printSet(s2);
-//
-//	int arr2[] = { 12,9,6,18,39,12,9,6 };
-//	s2.insert(arr2, arr2 + sizeof(arr2) / sizeof(arr2[0]));
-//	printSet(s2);
-//
-//	int num = s2.erase(39);
-//	printSet(s2);
-//	cout << num << endl;
-//	num = s2.erase(399);
-//	cout << num << endl;
-//	s2.erase(s2.begin());
-//	//erase: 不能传非法位置：比如end;
-//	//s2.erase(s2.end());
-//	printSet(s2);
-//	s2.erase(++s2.begin(), --s2.end());
-//	printSet(s2);
+//	RBTree<int, int> rbt;
+//	rbt.insert(make_pair(10, 10));
+//	rbt.insert(make_pair(15, 15));
+//	rbt.insert(make_pair(5, 5));
+//	rbt.insert(make_pair(2, 2));
 //}
 
 int main()
