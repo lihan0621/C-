@@ -110,7 +110,7 @@ public:
 				}
 				else
 				{
-					cout << "Rotate" << endl;
+					//cout << "Rotate" << endl;
 					//判断是否为双旋的场景
 					if (cur == parent->_right)
 					{
@@ -137,7 +137,7 @@ public:
 				}
 				else
 				{
-					cout << "Rotate" << endl;
+					//cout << "Rotate" << endl;
 					if (cur == parent->_left)
 					{
 						RotateR(parent);
@@ -208,7 +208,7 @@ public:
 				pparent->_left = subL;
 			else
 				pparent->_right = subL;
-			subL->_parent = parent;
+			subL->_parent = pparent;
 		}
 		parent->_parent = subL;
 	}
@@ -247,6 +247,55 @@ public:
 			cout << root->_kv.first << " ";
 			_inorder(root->_right);
 		}
+	}
+
+	//红黑树
+	//1. 根： 黑色
+	//2. 每条路径黑色个数相同
+	//3. 红色不能连续
+	bool isbalance()
+	{
+		if (_header->_parent == nullptr)
+			return true;
+		Node* root = _header->_parent;
+		if (root->_color == RED)
+			return false;
+		//统计一条路径上的黑色节点个数
+		int bCount = 0;
+		Node* cur = root;
+		while (cur)
+		{
+			if (cur->_color == BLACK)
+				++bCount;
+			cur = cur->_left;
+		}
+		//遍历每一条路径
+		int curBCount = 0;
+		return _isblance(root, bCount, curBCount);
+	}
+
+	bool _isblance(Node* root, int& bCount, int curBCount)
+	{
+		//当root为空时，一条路径遍历结束
+		if (root == nullptr)
+		{
+			//判断黑色节点个数是否相同
+			if (curBCount != bCount)
+				return false;
+			else
+				return true;
+		}
+		//判断节点是否为黑色
+		if (root->_color == BLACK)
+			++curBCount;
+
+		//判断是否有红色连续节点
+		if (root->_parent && root->_color == RED && root->_parent->_color == RED)
+		{
+			cout << "data: " << root->_kv.first << endl;
+			return false;
+		}
+		return _isblance(root->_left, bCount, curBCount) && _isblance(root->_right, bCount, curBCount);
 	}
 
 	//成员： header
