@@ -4,8 +4,8 @@ using namespace std;
 
 enum COLOR
 {
-	BLACK,
-	RED
+	BLACK = 0,
+	RED = 1
 };
 
 template <class V>
@@ -30,18 +30,88 @@ struct RBNode
 	{}
 };
 
+template <class T>
+class RBTreeIterator
+{
+public:
+	typedef RBNode<T> Node;
+	typedef RBTreeIterator<T> Self;
+
+	Node* _node;
+
+	RBTreeIterator(Node* node)
+		:_node(node)
+	{}
+
+	T& operator*()
+	{
+		return _node->_val;
+	}
+
+	T* operator->()
+	{
+		return &_node->_val;
+	}
+
+	bool operator!=(const Self& it)
+	{
+		return _node != it._node;
+	}
+
+	//中序遍历
+	Self& operator++()
+	{
+		if (_node->_right)
+		{
+			//右子树的最左节点
+			_node = _node->_right;
+			while (_node->_left)
+			{
+				_node = _node->_left;
+			}
+		}
+		else
+		{
+			Node* parent = _node->_parent;
+			while (_node == parent->_right)
+			{
+				_node = parent;
+				parent = parent->_parent;
+			}
+			//避免没有右子树的情况
+			if(_node->_right != parent)
+				_node = parent;
+		}
+		return *this;
+	}
+
+};
+
+
+
 //KeyOfVal: 通过V获取其对应的K
 template <class K, class V, class KeyOfVal>
 class RBTree
 {
 public:
 	typedef RBNode<V> Node;
+	typedef RBTreeIterator<V> iterator;
 
 	RBTree()
 		:_header(new Node)
 	{
 		//创建空树
 		_header->_left = _header->_right = _header;
+	}
+
+	iterator begin()
+	{
+		return iterator(_header->_left);
+	}
+
+	iterator end()
+	{
+		return iterator(_header);
 	}
 
 	bool insert(const V& val)
@@ -319,11 +389,32 @@ class Map
 			return val.first;
 		}
 	};
+
+
 public:
+
+	typedef typename RBTree<K, pair<K, T>, MapKeyOfVal>::iterator iterator;
+
 	bool insert(const pair<K, T>& kv)
 	{
 		return _rbt.insert(kv);
 	}
+
+	iterator begin()
+	{
+		return _rbt.begin();
+	}
+
+	iterator end()
+	{
+		return _rbt.end();
+	}
+
+	T& operator[](const K& key)
+	{
+		bool ret = _rbt.insert(make_pair(K, T()));
+	}
+
 private:
 	typedef RBTree<K, pair<K, T>, MapKeyOfVal> rbt;
 	rbt _rbt;
@@ -358,6 +449,13 @@ void test()
 	m.insert(make_pair(2, 1));
 	m.insert(make_pair(3, 1));
 	m.insert(make_pair(4, 1));
+
+	Map<int, int>::iterator it = m.begin();
+	while (it != m.end())
+	{
+		cout << it->first << " " << it->second << endl;
+		++it;
+	}
 
 	Set<int> s;
 	s.insert(1);
