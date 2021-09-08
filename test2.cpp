@@ -85,6 +85,31 @@ public:
 		return *this;
 	}
 
+	Self& operator--()
+	{
+		if (_node->_left)
+		{
+			//左子树的最右节点
+			_node = _node->_left;
+			while (_node->_right)
+			{
+				_node = _node->_right;
+			}
+		}
+		else
+		{
+			Node* parent = _node->_parent;
+			while (_node == parent->_left)
+			{
+				_node = parent;
+				parent = parent->_parent;
+			}
+			if (_node->_left != parent)
+				_node = parent;
+		}
+		return *this;
+	}
+
 };
 
 
@@ -114,7 +139,13 @@ public:
 		return iterator(_header);
 	}
 
-	bool insert(const V& val)
+	iterator rbegin()
+	{
+		return iterator(_header->_right);
+	}
+
+	//bool insert(const V& val)
+	pair<iterator, bool> insert(const V& val)
 	{
 		//1. 搜索树的插入
 		//空树: _header->parent: nullptr
@@ -129,7 +160,8 @@ public:
 
 			//根节点是黑色
 			root->_color = BLACK;
-			return true;
+			//return true;
+			return make_pair(iterator(root), true);
 		}
 
 		//从根节点开始搜索
@@ -145,7 +177,8 @@ public:
 			if(kov(cur->_val) == kov(val))
 			{
 				//key值不允许重复
-				return false;
+				//return false;
+				return make_pair(iterator(cur), false);
 			}
 			//else if (cur->_val.first > val.first)
 			else if(kov(cur->_val) > kov(val))
@@ -160,6 +193,7 @@ public:
 
 		//创建待插入的节点
 		cur = new Node(val);
+		Node* node = cur;
 		if (kov(parent->_val) > kov(cur->_val))
 			parent->_left = cur;
 		else
@@ -231,7 +265,8 @@ public:
 		//更新header的左右指向
 		_header->_left = leftMost();
 		_header->_right = rightMost();
-		return true;
+		//return true;
+		return make_pair(iterator(node), true);
 	}
 
 	void RotateL(Node* parent)
@@ -395,7 +430,7 @@ public:
 
 	typedef typename RBTree<K, pair<K, T>, MapKeyOfVal>::iterator iterator;
 
-	bool insert(const pair<K, T>& kv)
+	pair<iterator, bool> insert(const pair<K, T>& kv)
 	{
 		return _rbt.insert(kv);
 	}
@@ -410,9 +445,16 @@ public:
 		return _rbt.end();
 	}
 
+	iterator rbegin()
+	{
+		return _rbt.rbegin();
+	}
+
 	T& operator[](const K& key)
 	{
-		bool ret = _rbt.insert(make_pair(K, T()));
+		pair<iterator, bool> ret = _rbt.insert(make_pair(key, T()));  
+		return ret.first->second;
+		//return ret.first.operator->()->second;
 	}
 
 private:
@@ -432,7 +474,10 @@ class Set
 		}
 	};
 public:
-	bool insert(const K& val)
+
+	typedef typename RBTree<K, K, SetKeyOfVal>::iterator iterator;
+
+	pair<iterator, bool> insert(const K& val)
 	{
 		return _rbt.insert(val);
 	}
@@ -450,17 +495,23 @@ void test()
 	m.insert(make_pair(3, 1));
 	m.insert(make_pair(4, 1));
 
-	Map<int, int>::iterator it = m.begin();
+	m[1] = 1;
+	m[2] = 2;
+	m[3] = 30;
+	m[4] = 400;
+
+	//Map<int, int>::iterator it = m.begin();
+	Map<int, int>::iterator it = m.rbegin();
 	while (it != m.end())
 	{
 		cout << it->first << " " << it->second << endl;
-		++it;
+		--it;
 	}
 
-	Set<int> s;
-	s.insert(1);
-	s.insert(2);
-	s.insert(3);
+	//Set<int> s;
+	//s.insert(1);
+	//s.insert(2);
+	//s.insert(3);
 }
 
 int main()
