@@ -31,6 +31,8 @@ public:
 
 	bool insert(const pair<K, V>& kv)
 	{
+		//0. 检查容量
+		checkCapacity();
 		//1. 计算哈希位置
 		int idx = kv.first % _hTable.size();
 
@@ -54,6 +56,66 @@ public:
 		_hTable[idx]._state = STATE::EXIST;
 		++_size;
 		return true;
+	}
+
+	void checkCapacity()
+	{
+		//负载因子: < 1
+		if (_hTable.size() == 0 || _size * 10 / _hTable.size() >= 7)
+		{
+			//开新表
+			int newC = _hTable.size() == 0 ? 10 : 2 * _hTable.size();
+			HashTable<K, V> newHt(newC);
+
+			for (int i = 0; i < _hTable.size(); ++i)
+			{
+				//插入状态为exist的数据
+				if (_hTable[i]._state == STATE::EXIST)
+				{
+					newHt.insert(_hTable[i]._kv);
+				}
+			}
+
+			Swap(newHt);
+		}
+	}
+
+	void Swap(HashTable<K, V>& Ht)
+	{
+		swap(_hTable, Ht._hTable);
+		swap(_size, Ht._size);
+	}
+
+	Node* find(const K& key)
+	{
+		//计算位置
+		int idx = key % _hTable.size();
+		while (_hTable[idx]._state != STATE::EMPTY)
+		{
+			if (_hTable[idx]._state == STATE::EXIST && key == _hTable[idx]._kv.first)
+			{
+				return &_hTable[idx];
+			}
+			++idx;
+			if (idx == _hTable.size())
+			{
+				idx = 0;
+			}
+		}
+		return nullptr;
+	}
+
+	bool erase(const K& key)
+	{
+		Node* node = find(key);
+		if (node)
+		{
+			//假删除
+			--_size;
+			node->_state = STATE::DELETE;
+			return true;
+		}
+		return false;
 	}
 
 private:
