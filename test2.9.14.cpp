@@ -68,20 +68,68 @@ public:
 private:
 	char* _str;
 };
+
+class Person
+{
+public:
+	Person(const char* name, char* sex, int age)
+		: _name(name)
+		, _sex(sex)
+		, _age(age)
+	{}
+	Person(const Person& p)
+		: _name(p._name)
+		, _sex(p._sex)
+		, _age(p._age)
+	{}
+	Person(Person&& p)
+		: _name(p._name)
+		, _sex(p._sex)
+		, _age(p._age)
+	{}
+	Person(Person&& p)
+		: _name(move(p._name))
+		, _sex(move(p._sex))
+		, _age(p._age)
+	{}
+private:
+	String _name;
+	String _sex;
+	int _age;
+};
+Person GetTempPerson()
+{
+	Person p("prety", "male", 18);
+	return p;
+}
 void test()
 {
-	String s1("hello");
-	String s2("world");
-	cout << "copy" << endl;
-	String s3(s1 + s2);
-	String s4(s2);
-	s4 = s1 + s2;
+	Person p(GetTempPerson());
 }
 
-int fun(int a)
-{
-	return a;
-}
+//void test()
+//{
+//	String s1("hello");
+//	String s2("world");
+//	cout << "copy" << endl;
+//	String s3(s1 + s2);
+//	String s4(s2);
+//	cout << "------------" << endl;
+//	s4 = s1 + s2;
+//	cout << "------------" << endl;
+//	s3 = s4;
+//	String s5(s3);
+//	//move()：修改对象属性：左值--->右值属性
+//	String&& rs = move(s3);
+//	//错误的使用
+//	String s6(move(s3));
+//
+//}
+//
+//int fun(int a)
+//{
+//	return a;
+//}
 
 //void test()
 //{
