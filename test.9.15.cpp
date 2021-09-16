@@ -4,39 +4,118 @@
 #include <string>
 #include <vector>
 #include <thread>
+#include <atomic>
+#include <mutex>
 using namespace std;
 
-class threadManager
+template <class Mtx>
+class LockGoard
 {
 public:
-	threadManager(thread& t)
-		:_t(t)
-	{}
-
-	~threadManager()
+	LockGoard(Mtx& mtx)
+		:_mtx(mtx)
 	{
-		if (_t.joinable())
-		{
-			_t.join();
-		}
+		_mtx.lock();
 	}
+
+	~LockGoard()
+	{
+		_mtx.unlock();
+	}
+
+	//·À¿½±´
+	LockGoard(const LockGoard<Mtx>& lg) = delete;
+	LockGoard& operator=(const LockGoard<Mtx>& lg) = delete;
+
 private:
-	thread& _t;
+	Mtx& _mtx;
 };
+
+mutex mtx;
+void fun1()
+{
+	LockGoard<mutex> lg(mtx);
+	//mtx.lock();
+	cout << "fun1()" << endl;
+	int n;
+	cin >> n;
+	if (n == 0)
+		return;
+	//mtx.unlock();
+}
+
+void fun2()
+{
+	LockGoard<mutex> lg(mtx);
+	//mtx.lock();
+	cout << "fun2()" << endl;
+	//mtx.unlock();
+}
 
 void test()
 {
-	thread t1([] {});
-	threadManager tm(t1);
+	thread t1(fun1);
+	thread t2(fun2);
 
-	/*vector<int> v;
-	v.at(3) = 10;*/
-
-	return;
 	t1.join();
-
-
+	t2.join();
 }
+
+//int sum = 0;
+////atomic<int> sum(0);
+//mutex mtx;
+//void fun(int n)
+//{
+//	for (int i = 0; i < n; ++i)
+//	{
+//		mtx.lock();
+//		sum++;
+//		mtx.unlock();
+//	}
+//}
+//
+//void test()
+//{
+//	int n;
+//	cin >> n;
+//	thread t1(fun, n);
+//	thread t2(fun, n);
+//	t1.join();
+//	t2.join();
+//	cout << sum << endl;
+//}
+
+//class threadManager
+//{
+//public:
+//	threadManager(thread& t)
+//		:_t(t)
+//	{}
+//
+//	~threadManager()
+//	{
+//		if (_t.joinable())
+//		{
+//			_t.join();
+//		}
+//	}
+//private:
+//	thread& _t;
+//};
+//
+//void test()
+//{
+//	thread t1([] {});
+//	threadManager tm(t1);
+//
+//	/*vector<int> v;
+//	v.at(3) = 10;*/
+//
+//	return;
+//	t1.join();
+//
+//
+//}
 
 //class A
 //{
