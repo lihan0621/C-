@@ -5,20 +5,13 @@ using namespace std;
 //auto_ptr: 禁止使用：管理权转移问题
 //auto_ptr：模拟实现
 template <class T>
-class	AutoPtr
+class AutoPtr
 {
 public:
 	//构造函数获取资源管理权
 	AutoPtr(T* ptr)
 		:_ptr(ptr)
 	{}
-
-	//析构中释放资源
-	~AutoPtr()
-	{
-		if (_ptr)
-			delete _ptr;
-	}
 
 	T* operator->()
 	{
@@ -32,7 +25,7 @@ public:
 
 	//管理权转移
 	AutoPtr(AutoPtr<T>& ap)
-		:_ptr(ap->_ptr)
+		:_ptr(ap._ptr)
 	{
 		ap._ptr = nullptr;
 	}
@@ -50,18 +43,28 @@ public:
 		return *this;
 	}
 
+	//析构中释放资源
+	~AutoPtr()
+	{
+		if (_ptr)
+		{
+			delete _ptr;
+			_ptr = nullptr; 
+		}
+	}
+
 private:
 	T* _ptr;
 };
 
 void test()
 {
-	auto_ptr<int> ap(new int);
-	auto_ptr<int> ap2(new int(3));
+	AutoPtr<int> ap(new int);
+	AutoPtr<int> ap2(new int(3));
 	*ap = 10;
 	*ap2 = 100;
 
-	auto_ptr<int> ap3 = ap;
+	AutoPtr<int> ap3 = ap;
 	//*ap = 100;
 
 	int* pa = new int;
