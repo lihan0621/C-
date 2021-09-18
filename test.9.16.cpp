@@ -2,54 +2,36 @@
 #include <memory> 
 using namespace std;
 
-//auto_ptr: 禁止使用：管理权转移问题
-//auto_ptr：模拟实现
+struct Date
+{
+	int _y = 1;
+	int _m = 2;
+	int _d = 3;
+
+	~Date()
+	{
+		cout << "~Date()" << endl;
+	}
+};
+
 template <class T>
-class AutoPtr
+class UniquePtr
 {
 public:
-	//构造函数获取资源管理权
-	AutoPtr(T* ptr)
+	UniquePtr(T* ptr)
 		:_ptr(ptr)
 	{}
 
-	T* operator->()
-	{
-		return _ptr;
-	}
+	//防拷贝
+	UniquePtr(const UniquePtr<T>& up) = delete;
+	UniquePtr<T>& operator=(const UniquePtr<T>& up) = delete;
 
-	T& operator*()
-	{
-		return *_ptr;
-	}
-
-	//管理权转移
-	AutoPtr(AutoPtr<T>& ap)
-		:_ptr(ap._ptr)
-	{
-		ap._ptr = nullptr;
-	}
-
-	AutoPtr<T>& operator=(AutoPtr<T>& ap)
-	{
-		if (this != &ap)
-		{
-			if (_ptr)
-				delete _ptr;
-			//管理权转移
-			_ptr = ap->_ptr;
-			ap->_ptr = nullptr;
-		}
-		return *this;
-	}
-
-	//析构中释放资源
-	~AutoPtr()
+	~UniquePtr()
 	{
 		if (_ptr)
 		{
 			delete _ptr;
-			_ptr = nullptr; 
+			_ptr = nullptr;
 		}
 	}
 
@@ -57,20 +39,87 @@ private:
 	T* _ptr;
 };
 
-void test()
-{
-	AutoPtr<int> ap(new int);
-	AutoPtr<int> ap2(new int(3));
-	*ap = 10;
-	*ap2 = 100;
+//void test()
+//{
+//	//unique_ptr: 在没有赋值和拷贝的场景下，可以正常使用
+//	//unique_ptr: 防拷贝
+//	unique_ptr<Date> up(new Date);
+//	//unique_ptr: 的拷贝构造为删除函数
+//	//unique_ptr<Date> up2(up);
+//	unique_ptr<Date> up3(new Date);
+//	//unique_ptr: 赋值运算符为删除函数
+//	//up3 = up;
+//}
 
-	AutoPtr<int> ap3 = ap;
-	//*ap = 100;
-
-	int* pa = new int;
-	int* pa2 = pa;
-
-}
+//auto_ptr: 禁止使用：管理权转移问题
+//auto_ptr：模拟实现
+//template <class T>
+//class AutoPtr
+//{
+//public:
+//	//构造函数获取资源管理权
+//	AutoPtr(T* ptr)
+//		:_ptr(ptr)
+//	{}
+//
+//	T* operator->()
+//	{
+//		return _ptr;
+//	}
+//
+//	T& operator*()
+//	{
+//		return *_ptr;
+//	}
+//
+//	//管理权转移
+//	AutoPtr(AutoPtr<T>& ap)
+//		:_ptr(ap._ptr)
+//	{
+//		ap._ptr = nullptr;
+//	}
+//
+//	AutoPtr<T>& operator=(AutoPtr<T>& ap)
+//	{
+//		if (this != &ap)
+//		{
+//			if (_ptr)
+//				delete _ptr;
+//			//管理权转移
+//			_ptr = ap->_ptr;
+//			ap->_ptr = nullptr;
+//		}
+//		return *this;
+//	}
+//
+//	//析构中释放资源
+//	~AutoPtr()
+//	{
+//		if (_ptr)
+//		{
+//			delete _ptr;
+//			_ptr = nullptr; 
+//		}
+//	}
+//
+//private:
+//	T* _ptr;
+//};
+//
+//void test()
+//{
+//	AutoPtr<int> ap(new int);
+//	AutoPtr<int> ap2(new int(3));
+//	*ap = 10;
+//	*ap2 = 100;
+//
+//	AutoPtr<int> ap3 = ap;
+//	//*ap = 100;
+//
+//	int* pa = new int;
+//	int* pa2 = pa;
+//
+//}
 
 //智能指针：
 // 1. 实现RAII思想
