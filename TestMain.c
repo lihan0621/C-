@@ -1,9 +1,61 @@
 #define _CRT_SECURE_NO_WARNINGS
 #pragma warning(disable:6031)
+
 //#include "SeqList.h"
 //#include "List.h"
 //#include "SCList.h"
-#include "DCList.h"
+//#include "DCList.h"
+#include "Stack.h"
+
+
+
+#if 0
+int main()
+{
+
+	LinkStack st;
+	LinkStackInit(&st);
+	LinkStackPush(&st, 1);
+	LinkStackPush(&st, 2);
+	LinkStackPush(&st, 3);
+	LinkStackPush(&st, 4);
+	LinkStackPush(&st, 5);
+	LinkStackShow(&st);
+	printf("-----------------\n");
+	LinkStackPop(&st);
+	LinkStackShow(&st);
+
+	LinkStackDestroy(&st);
+
+	system("pause");
+
+	return 0;
+}
+
+
+int main()
+{
+	SeqStack st;
+	SeqStackInit(&st, 0);
+	SeqStackPush(&st, 1);
+	SeqStackPush(&st, 2);
+	SeqStackPush(&st, 3);
+	SeqStackPush(&st, 4);
+	SeqStackPush(&st, 5);
+	SeqStackShow(&st);
+	printf("=============\n");
+	while (!IsEmpty(&st))
+	{
+		StackElemType val = SeqStackTop(&st);
+		SeqStackPop(&st);
+		printf("%d出栈\n", val);
+	}
+	printf("出栈完毕\n");
+	system("pause");
+	return 0;
+}
+
+
 
 int main()
 {
@@ -16,7 +68,7 @@ int main()
 	//List myList;
 	//ListInit(&mylist);
 
-	
+
 	DCList mylist;
 	DCListInit(&mylist);
 
@@ -38,25 +90,25 @@ int main()
 		printf("********************************************\n");
 		printf("请选择:>");
 		scanf("%d", &select);
-		if(select == 0)
+		if (select == 0)
 			break;
 
-		switch(select)
+		switch (select)
 		{
 		case 1:
 			printf("请输入要插入的数据<以-1结束>:");
-			while(scanf("%d", &item))
+			while (scanf("%d", &item))
 			{
-				if(item == -1)
+				if (item == -1)
 					break;
-				DCListPushBack(&mylist, item);
+				//DCListPushBack(&mylist, item);
 			}
 			break;
 		case 2:
 			printf("请输入要插入的数据<以-1结束>:");
-			while(scanf("%d", &item))
+			while (scanf("%d", &item))
 			{
-				if(item == -1)
+				if (item == -1)
 					break;
 				DCListPushFront(&mylist, item);
 			}
@@ -133,3 +185,4 @@ int main()
 	system("pause");
 	return 0;
 }
+#endif
