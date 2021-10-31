@@ -5,11 +5,53 @@
 //#include "List.h"
 //#include "SCList.h"
 //#include "DCList.h"
-#include "Stack.h"
+//#include "Stack.h"
+#include "Queue.h"
+
+int main()
+{
+	SeqQueue sq;
+	SeqQueueInit(&sq, 0);
+	SeqQueuePush(&sq, 1);
+	SeqQueuePush(&sq, 2);
+	SeqQueuePush(&sq, 3);
+	SeqQueuePush(&sq, 4);
+	SeqQueuePush(&sq, 5);
+	SeqQueueShow(&sq);
+	printf("----------------\n");
+	SeqQueuePop(&sq);
+	SeqQueueShow(&sq);
+	QueueElemType back = SeqQueueBack(&sq);
+	QueueElemType front = SeqQueueFront(&sq);
+	printf("∂”Œ≤£∫ %d,  ∂”Õ∑£∫ %d\n", back, front);
 
 
+	system("pause");
+	return 0;
+}
 
 #if 0
+int main()
+{
+	LinkQueue qu;
+	LinkQueueInit(&qu);
+	LinkQueuePush(&qu, 1);
+	LinkQueuePush(&qu, 2);
+	LinkQueuePush(&qu, 3);
+	LinkQueuePush(&qu, 4);
+	LinkQueuePush(&qu, 5);
+	LinkQueueShow(&qu);
+	printf("-----------------\n");
+	LinkQueuePop(&qu);
+	LinkQueueShow(&qu);
+
+
+	system("pause");
+	return 0;
+}
+
+
+
 int main()
 {
 
