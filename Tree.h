@@ -19,6 +19,9 @@ typedef struct BinTreeNode
 typedef BinTreeNode* BinTree;
 
 void BinTreeCreat(BinTree* t);
+void PreOrder(BinTree t);
+void IndOrder(BinTree t);
+void PostOrder(BinTree t);
 
 
 void BinTreeCreat(BinTree* t)
@@ -37,7 +40,34 @@ void BinTreeCreat(BinTree* t)
 	}
 }
 
+void PreOrder(BinTree t)
+{
+	if (t != NULL)
+	{
+		printf("%c", t->data);
+		PreOrder(t->leftChild);
+		PreOrder(t->rightChild);
+	}
+}
 
+void IndOrder(BinTree t)
+{
+	if (t != NULL)
+	{
+		IndOrder(t->leftChild);
+		printf("%c", t->data);
+		IndOrder(t->rightChild);
+	}
+}
 
+void PostOrder(BinTree t)
+{
+	if (t != NULL)
+	{
+		PostOrder(t->leftChild);
+		PostOrder(t->rightChild);
+		printf("%c", t->data);
+	}
+}
 
 #endif /* _TREE_H_ */
