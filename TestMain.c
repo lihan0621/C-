@@ -6,8 +6,57 @@
 //#include "SCList.h"
 //#include "DCList.h"
 //#include "Stack.h"
-#include "Queue.h"
+//#include "Queue.h"
+#include "Tree.h"
 
+int main()
+{
+	char* str = "ABC##DE##F##G#H##";
+	BinTree bt;
+	BinTreeInit(&bt);
+	//BinTreeCreat_1(&bt);
+	//bt = BinTreeCreat_2();
+
+	int index = 0;
+	bt = BinTreeCreat_3(str, &index);
+
+	printf("VLR: ");
+	PreOrder(bt);
+	printf("\n");
+	printf("VLR_Nor: ");
+	PreOrder_Nor(bt);
+	printf("\n");
+	printf("LVR: ");
+	IndOrder(bt);
+	printf("\n");
+	printf("LVR_NOR: ");
+	IndOrder_Nor(bt);
+	printf("\n");
+	printf("LRV: ");
+	PostOrder(bt);
+	printf("\n");
+	printf("LRV_NOR: ");
+	PostOrder_Nor(bt);
+	printf("\n");
+	printf("Level: ");
+	LevelOrder(bt);
+	printf("\n");
+
+	printf("size: %d\n", Size(bt));
+	printf("Height: %d\n", Height(bt));
+
+	char key = 'D';
+	BinTreeNode* p = Find(bt, key);
+
+	BinTreeNode* pr = Parent(bt, p);
+
+	BinTree bt1 = Clone(bt);
+
+	system("pause");
+	return 0;
+}
+
+#if 0
 int main()
 {
 	SeqQueue sq;
@@ -30,7 +79,6 @@ int main()
 	return 0;
 }
 
-#if 0
 int main()
 {
 	LinkQueue qu;
