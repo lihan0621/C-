@@ -11,6 +11,45 @@
 
 int main()
 {
+	char* vlr = "ABCDEFGH";
+	char* lvr = "CBEDFAGH";
+	char* lrv = "CEFDBHGA";
+	BinTree bt;
+	BinTreeInit(&bt);
+
+	int n = strlen(lvr);
+	//bt = BinTreeCreat_VLR_LVR(vlr, lvr, n);
+	bt = BinTreeCreat_LVR_LRV(lvr, lrv, n);
+
+	printf("VLR: ");
+	PreOrder(bt);
+	printf("\n");
+	printf("VLR_Nor: ");
+	PreOrder_Nor(bt);
+	printf("\n");
+	printf("LVR: ");
+	IndOrder(bt);
+	printf("\n");
+	printf("LVR_NOR: ");
+	IndOrder_Nor(bt);
+	printf("\n");
+	printf("LRV: ");
+	PostOrder(bt);
+	printf("\n");
+	printf("LRV_NOR: ");
+	PostOrder_Nor(bt);
+	printf("\n");
+	printf("Level: ");
+	LevelOrder(bt);
+	printf("\n");
+
+	system("pause");
+	return 0;
+}
+
+#if 0
+int main()
+{
 	char* str = "ABC##DE##F##G#H##";
 	BinTree bt;
 	BinTreeInit(&bt);
@@ -56,7 +95,6 @@ int main()
 	return 0;
 }
 
-#if 0
 int main()
 {
 	SeqQueue sq;
