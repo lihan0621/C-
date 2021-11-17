@@ -136,6 +136,7 @@ void TwoWayInsertSort(int* ar, int left, int right)
 }
 
 //希尔排序
+/*
 void _ShellInsert(int* ar, int left, int right, int gap)
 {
 	for (int i = left + gap; i < right; ++i)
@@ -160,6 +161,102 @@ void ShellSort(int* ar, int left, int right)
 		_ShellInsert(ar, left, right, dlta[i]);
 	}
 }
+*/
+
+void ShellSort(int* ar, int left, int right)
+{
+	int gap = right - left;
+	while (gap > 1)
+	{
+		gap = gap / 3 + 1;
+		for (int i = left + gap; i < right; ++i)
+		{
+			if (ar[i] < ar[i - gap])
+			{
+				int tmp = ar[i];
+				int j = i;
+				while (j > left && tmp < ar[j - gap])
+				{
+					ar[j] = ar[j - gap];
+					j = j - gap;
+				}
+				ar[j] = tmp;
+			}
+		}
+	}
+}
+
+//简单选择排序
+int GetMinIndex(int* ar, int left, int right)
+{
+	int min_val = ar[left];
+	int index = left;
+	for (int i = left + 1; i < right; ++i)
+	{
+		if (ar[i] < min_val)
+		{
+			min_val = ar[i];
+			index = i;
+		}
+	}
+	return index;
+}
+
+void SelectSort(int* ar, int left, int right)
+{
+	for (int i = left; i < right - 1; ++i)
+	{
+		int index = GetMinIndex(ar, i, right); 
+		if (index != i)
+			Swap(&ar[index], &ar[i]);
+	}
+}
+
+//堆排序
+void _AdjustDown(int* ar, int left, int right, int start)
+{
+	int n = right - left;
+	int i = start;      //代表父节点
+	int j = 2 * i + 1;  //代表i节点的左子树
+
+	int tmp = ar[i];
+
+	while (j < n)
+	{
+		if (j + 1 < n && ar[j] < ar[j + 1])
+			j = j + 1;
+
+		if (tmp < ar[j])
+		{
+			ar[i] = ar[j];
+			i = j;
+			j = 2 * i + 1;
+		}
+		else
+			break;
+	}
+	ar[i] = tmp;
+}
+
+void HeapSort(int* ar, int left, int right)
+{
+	int n = right - left;
+	int curpos = n / 2 - 1;  //找到二叉树的最后一个分支
+	while (curpos >= 0)
+	{
+		_AdjustDown(ar, left, right, curpos);
+		curpos--;
+	}
+
+	//排序
+	int end = right - 1;
+	while (end > left)
+	{
+		Swap(&ar[left], &ar[end]);
+		_AdjustDown(ar, left, end, 0);
+		end--;
+	}
+}
 
 void TestSortEfficient()
 {
@@ -171,6 +268,8 @@ void TestSortEfficient()
 	int* a4 = (int*)malloc(sizeof(int) * n);
 	int* a5 = (int*)malloc(sizeof(int) * n);
 	int* a6 = (int*)malloc(sizeof(int) * n);
+	int* a7 = (int*)malloc(sizeof(int) * n);
+	int* a8 = (int*)malloc(sizeof(int) * n);
 	srand(time(0));
 	for (int i = 0; i < n; ++i)
 	{
@@ -181,6 +280,8 @@ void TestSortEfficient()
 		a4[i] = a[i];
 		a5[i] = a[i];
 		a6[i] = a[i];
+		a7[i] = a[i];
+		a8[i] = a[i];
 	}
 
 	time_t start = clock();
@@ -217,6 +318,16 @@ void TestSortEfficient()
 	ShellSort(a6, 0, n);
 	end = clock();
 	printf("ShellSort: %u\n", (unsigned int)(end - start));
+
+	start = clock();
+	SelectSort(a7, 0, n);
+	end = clock();
+	printf("SelectSort: %u\n", (unsigned int)(end - start));
+
+	start = clock();
+	HeapSort(a8, 0, n);
+	end = clock();
+	printf("HeapSort: %u\n", (unsigned int)(end - start));
 }
 
 
