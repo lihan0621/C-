@@ -3,15 +3,14 @@
 #include <thread>
 using namespace std;
 
-struct Date
+struct A
 {
-	int _y = 1;
-	int _m = 2;
-	int _d = 3;
+	int _a = 1;
+	int _b = 2;
 
-	~Date()
+	~A()
 	{
-		cout << "~Date()" << endl;
+		cout << "~A" << endl;
 	}
 };
 
@@ -113,37 +112,192 @@ private:
 	mutex* _mtx;
 };
 
-void fun(const SharedPtr<Date>& sp, int n)
-{
-	for (int i = 0; i < n; ++i)
-	{
-		//修改引用计数，是线程安全
-		SharedPtr<Date> copy(sp);
-
-		//对于数据的操作不是线程安全的
-		copy->_y++;
-	}
-}
-
 void test()
 {
-	SharedPtr<Date> sp(new Date);
-	SharedPtr<Date> sp2(new Date);
-	int n = 10;
-	//{t1, t2}和{t3, t4}在修改引用计数时，是并行的
-	//t1和t2在修改引用计数时，是串行的
-	//t3和t4在修改引用计数时，是串行的
-	thread t1(fun, ref(sp), n);
-	thread t2(fun, ref(sp), n);
-	thread t3(fun, ref(sp2), n);
-	thread t4(fun, ref(sp2), n);
-	t1.join();
-	t2.join();
-	t3.join();
-	t4.join();
-	cout << sp.getCount() << endl;
-	cout << sp2.getCount() << endl;
+	SharedPtr<A> sp(new A[100]);
 }
+
+//struct Date
+//{
+//	int _y = 1;
+//	int _m = 2;
+//	int _d = 3;
+//
+//	~Date()
+//	{
+//		cout << "~Date()" << endl;
+//	}
+//};
+//
+//struct ListNode
+//{
+//	//shared_ptr<ListNode> _next;
+//	//shared_ptr<ListNode> _prev]
+//	weak_ptr <ListNode> _next;
+//	weak_ptr<ListNode> _prev;;
+//	int _data = 1;		
+//
+//	~ListNode()
+//	{
+//		cout << "~ListNode" << endl;
+//	}
+//};
+//
+//void test()
+//{
+//	shared_ptr<ListNode> n1(new ListNode);
+//	shared_ptr<ListNode> n2(new ListNode);
+//
+//	cout << n1.use_count() << endl;
+//	cout << n2.use_count() << endl;
+//
+//	n1->_next = n2;
+//	n2->_prev = n1;
+//
+//	cout << n1.use_count() << endl;
+//	cout << n2.use_count() << endl;
+//
+//	//weak_ptr不能单独使用： 最大作用是解决sheader_ptr循环引用的问题
+//	//weak_ptr<ListNode> wp(new ListNode);
+//	weak_ptr<ListNode> wp;
+//	wp = n1;
+//}
+
+//SharedPtr:
+// 1. 支持赋值和拷贝
+// 2. 通过引用计数保证资源被正确且唯一的释放
+// 3. 多线程中，用过对引用进行串行操作，保证计数更新正确
+// 4. 每一个资源都有自己独立的引用计数
+//
+//template <class T>
+//class SharedPtr
+//{
+//public:
+//	SharedPtr(T* ptr)
+//		:_ptr(ptr)
+//		, _countPtr(new size_t(1))
+//		, _mtx(new mutex)
+//	{}
+//
+//	SharedPtr(const SharedPtr<T>& sp)
+//		:_ptr(sp._ptr)
+//		, _countPtr(sp._countPtr)
+//		, _mtx(sp._mtx)
+//	{
+//		//计数器累加
+//		//++(*_countPtr);
+//		addCount();
+//	}
+//
+//	SharedPtr<T>& operator=(const SharedPtr<T>& sp)
+//	{
+//		//if (this != &sp)
+//		//判断管理的是否为同一份资源
+//		if(_ptr != sp._ptr)
+//		{
+//			//计数器自减
+//			//如果计数器为0，当前对象是最后一个管理此资源的对象
+//			//负责对资源的释放
+//			//if (--(*_countPtr) == 0)
+//			if(subCount() == 0)
+//			{
+//				delete _ptr;
+//				delete _countPtr;
+//				delete _mtx;
+//			}
+//			_ptr = sp._ptr;
+//			_countPtr = sp._countPtr;
+//
+//			//计数器累加
+//			//++(*_countPtr);
+//			addCount();
+//		}
+//		return *this;
+//	}
+//
+//	~SharedPtr()
+//	{
+//		//计数器自减
+//		//if (--(*_countPtr) == 0)
+//		if(subCount() == 0)
+//		{
+//			delete _ptr;
+//			delete _countPtr;
+//			delete _mtx;
+//			_countPtr = nullptr;
+//			_ptr = nullptr;
+//			_mtx = nullptr;
+//		}
+//	}
+//
+//	T* operator->()
+//	{
+//		return _ptr;
+//	}
+//
+//	T& operator*()
+//	{
+//		return *_ptr;
+//	}
+//
+//	size_t getCount()
+//	{
+//		return *_countPtr;	
+//	}
+//
+//	size_t addCount()
+//	{
+//		_mtx->lock();
+//		++(*_countPtr);
+//		_mtx->unlock();
+//		return *_countPtr;
+//	}
+//
+//	size_t subCount()
+//	{
+//		_mtx->lock();
+//		--(*_countPtr);
+//		_mtx->unlock;
+//		return *_countPtr;
+//	}
+//private:
+//	T* _ptr;
+//	size_t* _countPtr;
+//	//每一份资源有一个独立的锁
+//	mutex* _mtx;
+//};
+//
+//void fun(const SharedPtr<Date>& sp, int n)
+//{
+//	for (int i = 0; i < n; ++i)
+//	{
+//		//修改引用计数，是线程安全
+//		SharedPtr<Date> copy(sp);
+//
+//		//对于数据的操作不是线程安全的
+//		copy->_y++;
+//	}
+//}
+//
+//void test()
+//{
+//	SharedPtr<Date> sp(new Date);
+//	SharedPtr<Date> sp2(new Date);
+//	int n = 10;
+//	//{t1, t2}和{t3, t4}在修改引用计数时，是并行的
+//	//t1和t2在修改引用计数时，是串行的
+//	//t3和t4在修改引用计数时，是串行的
+//	thread t1(fun, ref(sp), n);
+//	thread t2(fun, ref(sp), n);
+//	thread t3(fun, ref(sp2), n);
+//	thread t4(fun, ref(sp2), n);
+//	t1.join();
+//	t2.join();
+//	t3.join();
+//	t4.join();
+//	cout << sp.getCount() << endl;
+//	cout << sp2.getCount() << endl;
+//}
 
 //void test()
 //{
