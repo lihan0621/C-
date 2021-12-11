@@ -1,49 +1,32 @@
-#include<iostream>
-#include<stdlib.h>
+#include <iostream>
 using namespace std;
 
-
-class Test
+void Sort(int arr[], int n)
 {
-public:
-	Test(int data = 0) : m_data(data)
+	for(int i=0; i<n-1; i++)
 	{
-		cout << "Test::Test()" << endl;
+		for(int j=1; j<n-i; j++)
+		{
+			if(arr[j]<arr[j-1])
+			{
+				int tmp=arr[j];
+				arr[j]=arr[j-1];
+				arr[j-1]=tmp;
+			}
+		}
 	}
-public:
-	void* operator new[](size_t sz)
-	{
-		void* ptr = malloc(sz);               //operator new的重载
-		return ptr;
-	}
-		void operator delete[](void* ptr)         //delete 重载
-	{
-		free(ptr);
-	}
-		void* operator new(size_t size, Test* ptr)
-	{
-		return &ptr[0]; // acement new的重载
-	}
-	void operator delete(void* ptr)
-	{
-		delete[] ptr;
-	}
-private:
-	int m_data;
-};
+}
 
-
-
-
-
-void main()
+int main()
 {
-	Test* pt = new Test[10];
-	delete[]pt;              //不会有警告
-
-
-	Test* pt1 = new Test[10];
-	new(pt1)Test(1);
-	delete[]pt1;     //警告：warning C4291: “void *Test::operator new(size_t,Test *)”: 未找到匹配的删除运算符；如果初始化引发异常，则不会释放内存	
-	
+	int arr[]={ 9,5,2,7 };
+	int n=sizeof(arr)/sizeof(arr[0]);
+	Sort(arr, n);
+	for(int i=0; i<n; i++)
+	{
+		cout<<arr[i]<<" ";
+	}
+	cout<<endl;
+	system("pause");
+	return 0;
 }
