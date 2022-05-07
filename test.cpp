@@ -1,237 +1,626 @@
-#include<stdio.h>
-#include<iostream>
+#include <iostream>
+#include <string>
 using namespace std;
-#include<string.h>
-#define false 0
-#define true 1
-int Available[50]={ 0 };
-int Max[50][50]={ 0 };
-int Allocation[50][50]={ 0 };
-int Need[50][50]={ 0 };
-int Request[50]={ 0 };
-int Work[50]={ 0 };
-char name[100]={ 0 };
-int temp[50]={ 0 };
-int Finish[50]={ 0 };
-int M=50;  //资源数量
-int N=50;  //可供资源种类数量
-void showdata()
-{
-	int i, j;
-	cout<<"此时刻的资源分配情况为:"<<endl;
-	cout<<endl;
-	cout<<"         Max       Allocation     Need       Available "<<endl;
-	cout<<"进程名   ";
-	for(j=0; j<4; j++)
-	{
-		for(i=0; i<N; i++)
-			cout<<name[i]<<" ";
-		cout<<"      ";
-	}
-	cout<<endl;
-	for(i=0; i<M; i++)
-	{
-		cout<<"  "<<i<<"      ";
-		for(j=0; j<N; j++)
-			cout<<Max[i][j]<<" ";
-		cout<<"      ";
-		for(j=0; j<N; j++)
-			cout<<Allocation[i][j]<<" ";
-		cout<<"      ";
-		for(j=0; j<N; j++)
-			cout<<Need[i][j]<<" ";
-		if(i==0) {
-			cout<<"      ";
-			for(j=0; j<N; j++)
-				cout<<Available[j]<<" ";
-		}
-		cout<<endl;
-	}
-}
-int safe()//安全性算法
-{
-	int i, d, k=0, m, h, s, apply, Finish[100]={ 0 };
-	int j;
 
-	for(i=0; i<N; i++)
-		Work[i]=Available[i];
-	cout<<endl<<"  安全性检查  "<<endl;
-	cout<<"             Work      Need     Allocation     Work+Allocation     Finish"<<endl;
-	cout<<"进程名      ";
-	for(h=0; h<4; h++) {
-		for(s=0; s<N; s++)
-			cout<<name[s]<<" ";
-		cout<<"      ";
-	}
-	cout<<endl;
-	for(i=0; i<M; i++) {//安全序列
-		apply=0;
-		for(j=0; j<N; j++) {
-			if(Finish[i]==false && Need[i][j]<=Work[j])
-			{
-				apply++;
-				if(apply==N)
-				{
-					cout<<" "<<i<<"         ";
-					for(d=0; d<N; d++)
-						cout<<Work[d]<<" ";
-					cout<<"      ";
-					for(d=0; d<N; d++)
-						cout<<Need[i][d]<<" ";
-					cout<<"      ";
-					for(d=0; d<N; d++)
-						cout<<Allocation[i][d]<<" ";
-					cout<<"      ";
-					for(m=0; m<N; m++)
-					{
-						Work[m]=Work[m]+Allocation[i][m];
-						cout<<Work[m]<<" ";
-					}
-					Finish[i]=true;
-					temp[k]=i;
-					cout<<"              ";
-					cout<<"true"<<" ";
-					cout<<endl;
-					k++;
-					i=-1;
-				}
-			}
-		}
-	}
-	for(i=0; i<M; i++) {
-		if(Finish[i]==false) {
-			for(j=0; j<N; j++) {
-				Available[j]=Available[j]+Request[j];
-				Allocation[i][j]=Allocation[i][j]-Request[j];
-				Need[i][j]=Need[i][j]+Request[j];
-			}
-			cout<<endl<<"系统进入不安全状态！此时系统不分配资源！"<<endl;//系统不安全
-			return 0;
-		}
-	}
-	cout<<endl<<"此时系统是安全的!"<<endl;//如果安全，输出成功
-	cout<<"安全序列为:";
-	for(i=0; i<M; i++) {//输出运行进程数组
-		cout<<temp[i];
-		if(i<M-1) cout<<"->";
-	}
-	cout<<endl;
+class A
+{
+public:
+	int m_a = 1;
+};
+
+class B : virtual public A
+{
+public:
+	int m_b = 2;
+};
+
+class C : virtual public A
+{
+public:
+	int m_c = 3;
+};
+
+class D :public B, public C
+{
+public:
+	int m_d = 4;
+};
+
+void main()
+{
+	D d;
+	cout << d.m_d << endl;
+	cout << d.m_c << endl;
+	cout << d.m_b << endl;
+	cout << d.m_a << endl;
+	cout << d.B::m_a << endl;
+	cout << d.C::m_a << endl;
+	//cout << d.A::m_a << endl;
+}
+
+#if 0
+class Person
+{
+public:
+	Person() { ++_count; }
+protected:
+	string _name; // 姓名
+public:
+	static int _count; // 统计人的个数。
+};
+
+
+int Person::_count = 0;
+
+
+class Student : public Person
+{
+protected:
+	int _stuNum; // 学号
+};
+
+
+class Graduate : public Student
+{
+protected:
+	string _seminarCourse; // 研究科目
+};
+
+
+void TestPerson()
+{
+	Student s1;
+	Student s2;
+	Student s3;
+	Graduate s4;
+	cout << " 人数 :" << Person::_count << endl;
+	Student::_count = 0;
+	cout << " 人数 :" << Person::_count << endl;
+}
+
+int main()
+{
+	TestPerson();
 	return 0;
 }
-void bank()//利用银行家算法对申请资源对进行判定
+
+
+class Student;
+
+class Person
 {
-	char ch;
-	int i=0, j=0;
-	ch='y';
-	int sum=0;
-	cout<<endl<<"请输入要求分配的资源进程号(0-"<<M-1<<"):";
-	cin>>i;//输入申请的资源号
-	cout<<endl<<"请输入进程 "<<i<<" 申请的资源:"<<endl;
-	for(j=0; j<N; j++)
-	{
-		cout<<name[j]<<":";
-		cin>>Request[j];//输入需要申请的资源
-	}
-	for(j=0; j<N; j++) {
-		if(Request[j]>Need[i][j])
-		{
-			cout<<endl<<"进程 "<<i<<"申请的资源大于它需要的资源";
-			cout<<" 分配不合理，不予分配！"<<endl;
-			ch='n';
-			break;
-		}
-		else {
-			if(Request[j]>Available[j])//判断申请是否大于当前资源，若大于则
-			{                         //出错
-				cout<<endl<<"进程"<<i<<"申请的资源大于系统现在可利用的资源";
-				cout<<" 分配出错，不予分配!"<<endl;
-				ch='n';
-				break;
-			}
-		}
-	}
-	if(ch=='y') {
-		int o;
-		for(o=0; o<M; o++)
-		{
-			Available[o]=Available[o]-Request[o];
-			Allocation[i][o]=Allocation[i][o]+Request[o];
-			Need[i][o]=Need[i][o]-Request[o];
-		}//根据进程需求量变换资源
-		for(int p=0; p<N; p++)
-		{
-			if(Need[i][p]==0)
-			{
-				sum++;
-				if(sum==N)
-				{
-					for(int u=0; u<N; u++)
-					{
-						Available[u]+=Allocation[i][u];
-						Allocation[i][u]-=Max[i][u];
-					}
-				}
-			}
-		}
-		showdata();//根据进程需求量显示变换后的资源
-		safe();
-	}
+public:
+	friend void Display(const Person& p, const Student& s);
+protected:
+	string _name; // 姓名
+};
+
+class Student : public Person
+{
+public:
+	friend void Display(const Person& p, const Student& s);
+protected:
+	int _stuNum; // 学号
+};
+
+void Display(const Person& p, const Student& s)
+{
+	cout << p._name << endl;
+	cout << s._stuNum << endl;
 }
-int main()//主函数
+int main()
 {
-	int t=1, number, m, n, flag;
-	char ming;
-	cout<<"*****************----------*********************"<<endl;
-	cout<<"*****************银行家算法********************"<<endl;
-	cout<<"*****************----------*********************"<<endl;
-	cout<<endl<<"输入系统可供资源种类的数量:";
-	cin>>n;
-	N=n;
-	for(int i=0; i<n; i++)
-	{
-		cout<<"资源"<<i+1<<"的名称:";
-		cin>>ming;
-		name[i]=ming;
-		cout<<"资源的数量:";
-		cin>>number;
-		Available[i]=number;
-	}
-	cout<<endl;
-	cout<<"输入作业的数量:";
-	cin>>m;
-	M=m;
-	cout<<endl<<"输入各进程的最大需求量("<<m<<"*"<<n<<"矩阵)[Max]:"<<endl;
-	for(int i=0; i<m; i++)
-		for(int j=0; j<n; j++)
-			cin>>Max[i][j];
-	flag=1;
-	while(flag)
-	{
-		cout<<"输入各进程已经申请的资源量("<<m<<"*"<<n<<"矩阵)[Allocation]:"<<endl;
-		for(int i=0; i<m; i++)
-			for(int j=0; j<n; j++) {
-				cin>>Allocation[i][j];
-				if(Allocation[i][j]>Max[i][j])
-					flag=0;
-				Need[i][j]=Max[i][j]-Allocation[i][j];
-			}
-		if(!flag)
-			cout<<"申请的资源大于最大需求量，请重新输入!\n";
-		else
-			break;
-	}
-	showdata();//显示各种资源
-	safe();//用银行家算法判定系统是否安全
-	while(1) {
-		if(t==1) {
-			cout<<endl<<"利用银行家算法预分配资源   "<<endl;
-			bank();
-			t=0;
-		}
-		else break;
-		cout<<endl<<" 是否继续银行家算法？(按 1 继续,按其它任意退出):";
-		cin>>t;
-		cout<<endl;
-	}
+	Person p;
+	Student s;
+	Display(p, s);
 	return 0;
 }
+
+
+class A
+{
+public:
+	A(int a) :m_a(a) {
+		cout << "A::A()" << endl;
+	}
+	~A() {
+		cout << "A::~A()" << endl;
+	}
+private:
+	int m_a;
+};
+class B
+{
+public:
+	B(int b) :m_b(b) {
+		cout << "B::B()" << endl;
+	}
+	~B() {
+		cout << "B::~B()" << endl;
+	}
+private:
+	int m_b;
+};
+class C
+{
+public:
+	C(int c) :m_c(c) {
+		cout << "C::C()" << endl;
+	}
+	~C() {
+		cout << "C::~C()" << endl;
+	}
+private:
+	int m_c;
+};
+
+class D :public A, public B, public C
+{
+public:
+	D(int d = 0) :m_d(d), A(1), B(2), C(3), a(10), b(20), c(30) {
+		cout << "D::D()" << endl;
+	}
+	~D() {
+		cout << "~D::D()" << endl;
+	}
+private:
+	int m_d;
+	A a;
+	B b;
+	C c;
+};
+
+int main()
+{
+	D d;
+	
+	return 0;
+}
+
+class Base
+{
+public:
+	Base(int a) :m_a(a) {
+		cout << "Base::Base()" << endl;
+	}
+	Base(const Base& b) {
+		cout << "Base::Base(const Base&)" << endl;
+	}
+	Base& operator=(const Base& b) {
+		//cout << "+++++++++++++++++++++++" << endl;
+		if (this != &b)
+		{
+			m_a = b.m_a;
+		}
+		return *this;
+	}
+	~Base() {
+		cout << "Base::~Base()" << endl;
+	}
+private:
+	int m_a;
+};
+
+class D : public Base
+{
+public:
+	D(int d = 0) :m_d(d), Base(d) {
+		cout << "D::D()" << endl;
+	}
+	D(const  D& d) :Base(d) {
+		cout << "D::D(const D&)" << endl;
+	}
+	D& operator=(const D& d) {
+		//cout << "--------------" << endl;
+		if (this != &d)
+		{
+			Base::operator=(d);
+			m_d = d.m_d;
+		}
+		return *this;
+	}
+	~D() {
+		cout << "D::~D()" << endl;
+	}
+private:
+	int m_d;
+};
+
+int main()
+{
+	D d;
+	D d1 = d;
+	D d2;
+	d2 = d;
+
+	return 0;
+}
+
+
+class A
+{
+public:
+	void fun()
+	{
+		cout << "func()" << endl;
+	}
+};
+class B : public A
+{
+public:
+	void fun(int i)
+	{
+		A::fun();
+		cout << "func(int i)->" << i << endl;
+	}
+};
+
+int main()
+{
+	B b;
+	b.fun(0);
+}
+
+
+class Person
+{
+protected:
+	string _name = "小李子"; // 姓名
+	int _num = 111; // 身份证号
+};
+class Student : public Person
+{
+public:
+	void Print()
+	{
+		cout << " 姓名:" << _name << endl;
+		cout << " 身份证号:" << Person::_num << endl;
+		cout << " 学号:" << _num << endl;
+	}
+protected:
+	int _num = 999; // 学号
+};
+
+int main()
+{
+	Student s;
+	s.Print();
+}
+
+
+
+
+//赋值兼容规则
+class Base
+{
+public:
+	Base(int a = 0) :m_a(a) {
+		//cout << "Base::Base()" << endl;
+	}
+	~Base() {
+		//cout << "Base::~Base()" << endl;
+	}
+public:
+	void fun() {
+		cout << "Base::fun()" << endl;
+	}
+
+	void fun(int a) {
+		cout << "Base::fun(int)" << endl;
+	}
+
+	void list() {
+		cout << "Base::list()" << endl;
+	}
+
+private:
+	int m_a;
+};
+
+class D : public Base
+{
+public:
+	D(int d = 0) :m_d(d) {
+		//cout << "D::D()" << endl;
+	}
+	~D() {
+		//cout << "D::~D()" << endl;
+	}
+public:
+	void show() {
+		cout << "D::show()" << endl;
+	} 
+	//同名隐藏
+	void fun()  {
+		cout << "D::fun()" << endl;
+	}
+private:
+	int m_d;
+};
+
+void main()
+{
+	Base b;
+	D d;
+
+	//Base* pb = &d;
+	//pb->show();
+
+	d.fun();
+	//d.fun(0);
+	d.Base::fun(0);
+}
+
+
+void main()
+{
+	Base b;
+	D d;
+	//b = d;
+	//b.fun();  //将子类对象赋值给父类对象，父类调用的是父类方法
+
+	//Base* pb = &d;
+	//pb->fun();
+
+	//Base& rb = d;
+	//rb.fun();
+}
+
+void main()
+{
+	Base b;
+	D d;
+	b.fun();
+	//b.show();
+	d.show();
+	d.fun();
+}
+
+void main()
+{
+	D d;
+	Base b;
+	b = d;         //1.子类对象可以给父类对象赋值
+	Base* pb = &d; //2.子类对象的地址可以给父类对象的指针赋值
+	Base& rb = d;  //3.子类对象可以给父类对象的引用赋值
+}
+
+class Base
+{
+public:
+	void Call_fun()
+	{
+		fun();
+	}
+private:
+	void fun()
+	{
+		cout << "Base::fun()" << endl;
+	}
+};
+
+//终止父类
+class D : private Base
+{};
+
+void main()
+{
+	D d;
+	//d.Call_fun();
+}
+
+
+//基类
+class A
+{
+public:
+	A(int a = 0) : m_a(a)
+	{
+		cout << "A::A()" << endl;
+	}
+public:
+	void fun()
+	{
+		cout << "This is A::fun()" << endl;
+	}
+protected:
+	void show()
+	{
+		cout << "This is A::show()" << endl;
+	}
+private:
+	void print()
+	{
+		cout << "This is A::print()" << endl;
+	}
+private:
+	int m_a;
+};
+
+//派生类
+class D : private A
+{
+public:
+	D(int d = 0) : m_d(d)
+	{
+		cout << "D::D()" << endl;
+	}
+public:
+	void list()
+	{
+		fun();
+		show();
+		//print();
+	}
+private:
+	int m_d;
+};
+
+class D1 : public D
+{
+public:
+	void fun1()
+	{
+		//fun();
+		//show();
+	}
+};
+
+void main()
+{
+	D d;
+	//d.fun();
+	system("pause");
+}
+
+
+
+//基类
+class A
+{
+public:
+	A(int a = 0) : m_a(a)
+	{
+		cout << "A::A()" << endl;
+	}
+public:
+	void fun()
+	{
+		cout << "This is A::fun()" << endl;
+	}
+protected:
+	void show()
+	{
+		cout << "This is A::show()" << endl;
+	}
+private:
+	void print()
+	{
+		cout << "This is A::print()" << endl;
+	}
+private:
+	int m_a;
+};
+
+//派生类
+class D : protected A
+{
+public:
+	D(int d = 0) : m_d(d)
+	{
+		cout << "D::D()" << endl;
+	}
+public:
+	void list()
+	{
+		show();
+		//print();
+	}
+private:
+	int m_d;
+};
+
+void main()
+{
+	D d;
+	//d.fun();
+	system("pause");
+}
+
+
+//基类
+class A
+{
+public:
+	A(int a = 0) : m_a(a)
+	{
+		cout << "A::A()" << endl;
+	}
+public:
+	void fun()
+	{
+		cout << "This is A::fun()" << endl;
+	}
+protected:
+	void show()
+	{
+		cout << "This is A::show()" << endl;
+	}
+private:
+	void print()
+	{
+		cout << "This is A::print()" << endl;
+	}
+private:
+	int m_a;
+};
+
+//派生类
+class D : public A
+{
+public:
+	D(int d = 0) : m_d(d)
+	{
+		cout << "D::D()" << endl;
+	}
+public:
+	void list()
+	{
+		show();
+		//print();
+	}
+private:
+	int m_d;
+};
+
+void main()
+{
+	//cout << sizeof(A) << endl;
+	//cout << sizeof(D) << endl;
+	D d;
+	d.fun();
+	d.list();
+	system("pause");
+}
+
+
+class Person
+{
+public:
+	void Prite()
+	{
+		cout << m_name << " : " << m_age << endl;
+	}
+private:
+	string m_name = "bite";
+	int m_age = 5;
+};
+
+class Student : public Person
+{
+public:
+	Student(string name, int age)
+		:m_name(name)
+		, m_age(age)
+	{}
+};
+
+
+int main()
+{
+	Student s("xxx", 20);
+	s.Prite();
+	system("pause");
+	return 0;
+}
+
+int main()
+{
+	Person p;
+	p.Prite();
+	Student s;
+	s.Prite();
+	system("pause");
+	return 0;
+}
+#endif
